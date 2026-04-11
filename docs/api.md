@@ -1,6 +1,6 @@
 # API Reference
 
-Base URL: `http://localhost:8009` (configurable via `SERVER_PORT`)
+Base URL: `http://localhost:6731` (configurable via `SERVER_PORT`)
 
 All responses are JSON. Error responses use `{"detail": "error message"}`.
 

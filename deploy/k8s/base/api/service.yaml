@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gng-api
+  labels:
+    app.kubernetes.io/name: gng-api
+    app.kubernetes.io/component: api
+    app.kubernetes.io/part-of: gng-platform
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8009
+      targetPort: http
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: gng-api

@@ -3,8 +3,11 @@ services:
     build:
       context: ./apps/api
       dockerfile: Dockerfile
+      target: dev
+    volumes:
+      - ./apps/api:/src:z
     ports:
-      - "8009:8009"
+      - "6731:8009"
     environment:
       ENVIRONMENT: development
       SERVER_PORT: "8009"
@@ -17,7 +20,7 @@ services:
       STORAGE_SECURE: "false"
       ARCHIVE_BUCKET: archive
       REDIS_URL: redis://redis:6379/0
-      CORS_ALLOWED_ORIGINS: http://localhost:3000
+      CORS_ALLOWED_ORIGINS: http://localhost:6730
       PIPELINE_CALLBACK_SECRET: dev-secret-change-me
       PIPELINE_CALLBACK_URL: http://api:8009
       PROCESSING_ENABLE_METADATA_EXTRACTION: "true"
@@ -29,10 +32,41 @@ services:
         condition: service_completed_successfully
     restart: unless-stopped
 
+  web:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- -p 3000"
+    ports:
+      - "6730:3000"
+    environment:
+      NEXT_PUBLIC_ADMIN_API_BASE_URL: http://localhost:6731
+    volumes:
+      - ./apps/web:/app:z
+      - web-node-modules:/app/node_modules
+    depends_on:
+      - api
+
+  worker:
+    build:
+      context: ./pipelines
+      dockerfile: Dockerfile
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      PIPELINE_CALLBACK_URL: http://api:8009
+      PIPELINE_CALLBACK_SECRET: dev-secret-change-me
+      STORAGE_ENDPOINT: minio:9000
+      STORAGE_ACCESS_KEY: minioadmin
+      STORAGE_SECRET_KEY: minioadmin
+      STORAGE_BUCKET: artifacts
+      ARCHIVE_BUCKET: archive
+    depends_on:
+      - redis
+      - api
+
   mongo:
     image: mongo:8
     ports:
-      - "27017:27017"
+      - "6732:27017"
     volumes:
       - mongo-data:/data/db
 
@@ -40,8 +74,8 @@ services:
     image: minio/minio:latest
     command: server /data --console-address ":9001"
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "6733:9000"
+      - "6734:9001"
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
@@ -61,7 +95,7 @@ services:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
     volumes:
-      - ./scripts:/scripts:ro
+      - ./scripts:/scripts:ro,z
     depends_on:
       minio:
         condition: service_started
@@ -69,52 +103,15 @@ services:
   redis:
     image: redis:8-alpine
     ports:
-      - "6379:6379"
+      - "6735:6379"
     volumes:
       - redis-data:/data
-
-  # --- Profile: web (Phase 2) ---
-  web:
-    image: node:22-alpine
-    working_dir: /app
-    command: sh -c "npm install && npm run dev"
-    ports:
-      - "3000:3000"
-    environment:
-      NEXT_PUBLIC_ADMIN_API_BASE_URL: http://localhost:8009
-    volumes:
-      - ./apps/web:/app
-      - web-node-modules:/app/node_modules
-    depends_on:
-      - api
-    profiles:
-      - web
-
-  # --- Profile: pipeline (Phase 3) ---
-  worker:
-    build:
-      context: ./pipelines
-      dockerfile: Dockerfile
-    environment:
-      REDIS_URL: redis://redis:6379/0
-      PIPELINE_CALLBACK_URL: http://api:8009
-      PIPELINE_CALLBACK_SECRET: dev-secret-change-me
-      STORAGE_ENDPOINT: minio:9000
-      STORAGE_ACCESS_KEY: minioadmin
-      STORAGE_SECRET_KEY: minioadmin
-      STORAGE_BUCKET: artifacts
-      ARCHIVE_BUCKET: archive
-    depends_on:
-      - redis
-      - api
-    profiles:
-      - pipeline
 
   # --- Profile: ai (Phase 5) ---
   ollama:
     image: ollama/ollama:latest
     ports:
-      - "11434:11434"
+      - "6736:11434"
     volumes:
       - ollama-data:/root/.ollama
     profiles:

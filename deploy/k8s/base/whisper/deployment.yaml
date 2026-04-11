@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gng-whisper
+  labels:
+    app.kubernetes.io/name: gng-whisper
+    app.kubernetes.io/component: whisper
+    app.kubernetes.io/part-of: gng-platform
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gng-whisper
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: gng-whisper
+        app.kubernetes.io/component: whisper
+        app.kubernetes.io/part-of: gng-platform
+    spec:
+      containers:
+        - name: whisper
+          image: docker.io/onerahmet/openai-whisper-asr-webservice:latest-gpu
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 9000
+              protocol: TCP
+          env:
+            - name: ASR_ENGINE
+              value: whisperx
+            - name: ASR_MODEL
+              value: tiny.en
+            - name: ASR_DEVICE
+              value: cuda
+            - name: ASR_MODEL_PATH
+              value: /tmp/.cache
+            - name: MODEL_IDLE_TIMEOUT
+              value: "0"
+            - name: TRANSFORMERS_CACHE
+              value: /tmp/huggingface/hub
+            - name: MPLCONFIGDIR
+              value: /tmp/.config
+          resources:
+            requests:
+              memory: 6Gi
+              cpu: 1000m
+              nvidia.com/gpu: 1
+            limits:
+              memory: 12Gi
+              cpu: 4000m
+              nvidia.com/gpu: 1
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      tolerations:
+        - key: nvidia.com/gpu.product
+          operator: Equal
+          value: NVIDIA-A100-SXM4-40GB
+          effect: NoSchedule
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 20Gi

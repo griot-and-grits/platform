@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gng-whisper
+  annotations:
+    route.openshift.io/termination: edge
+spec:
+  tls:
+    - hosts:
+        - whisper-api.griotandgrits.org
+  rules:
+    - host: whisper-api.griotandgrits.org
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: gng-whisper
+                port:
+                  name: http

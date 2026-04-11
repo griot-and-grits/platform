@@ -1,7 +1,7 @@
 export const ADMIN_API_BASE_URL =
     process.env.NEXT_PUBLIC_ADMIN_API_BASE_URL ??
     process.env.NEXT_PUBLIC_API_BASE_URL ??
-    'http://localhost:8009';
+    'http://localhost:6731';
 
 export const ADMIN_API_TIMEOUT = Number(
     process.env.NEXT_PUBLIC_ADMIN_API_TIMEOUT ?? 30000,

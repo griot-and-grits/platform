@@ -86,13 +86,13 @@ func Load() (*Config, error) {
 	v.SetDefault("server.max_upload_size", 100*1024*1024) // 100MB
 
 	// Database
-	v.SetDefault("db.uri", "mongodb://localhost:27017/")
+	v.SetDefault("db.uri", "mongodb://localhost:6732/")
 	v.SetDefault("db.name", "gngdb")
 	v.SetDefault("db.max_pool_size", 10)
 	v.SetDefault("db.min_pool_size", 1)
 
 	// Storage
-	v.SetDefault("storage.endpoint", "localhost:9000")
+	v.SetDefault("storage.endpoint", "localhost:6733")
 	v.SetDefault("storage.access_key", "minioadmin")
 	v.SetDefault("storage.secret_key", "minioadmin")
 	v.SetDefault("storage.bucket", "artifacts")
@@ -105,7 +105,7 @@ func Load() (*Config, error) {
 	v.SetDefault("archive.globus_enabled", false)
 
 	// CORS
-	v.SetDefault("cors.allowed_origins", "http://localhost:3000")
+	v.SetDefault("cors.allowed_origins", "http://localhost:6730")
 
 	// Processing
 	v.SetDefault("processing.enable_transcription", false)
@@ -114,9 +114,9 @@ func Load() (*Config, error) {
 
 	// Pipeline
 	v.SetDefault("pipeline.provider", "redis-queue")
-	v.SetDefault("pipeline.redis_url", "redis://localhost:6379/0")
+	v.SetDefault("pipeline.redis_url", "redis://localhost:6735/0")
 	v.SetDefault("pipeline.callback_secret", "dev-secret-change-me")
-	v.SetDefault("pipeline.callback_url", "http://localhost:8009")
+	v.SetDefault("pipeline.callback_url", "http://localhost:6731")
 
 	// Bind env vars with explicit prefixes to match the flat env var naming
 	bindEnvs(v)
