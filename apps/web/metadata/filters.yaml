@@ -1,0 +1,111 @@
+tags:
+  - name: "Personal Stories"
+    popularity: 1.0
+  - name: "Resilience"
+    popularity: 1.0
+  - name: "Education"
+    popularity: 1.0
+  - name: "Family History"
+    popularity: 0.9
+  - name: "Historical Events"
+    popularity: 0.9
+  - name: "September 11"
+    popularity: 0.8
+  - name: "Love Stories"
+    popularity: 0.8
+  - name: "Founder Stories"
+    popularity: 0.8
+  - name: "Childhood"
+    popularity: 0.8
+  - name: "Philadelphia"
+    popularity: 0.8
+  - name: "Medical History"
+    popularity: 0.7
+  - name: "Racial Injustice"
+    popularity: 0.7
+  - name: "Heritage"
+    popularity: 0.7
+  - name: "Prison System"
+    popularity: 0.6
+  - name: "Work & Employment"
+    popularity: 0.6
+  - name: "Migration"
+    popularity: 0.6
+  - name: "Historical Exploitation"
+    popularity: 0.5
+  - name: "Military Service"
+    popularity: 0.5
+  - name: "Medical Ethics"
+    popularity: 0.4
+  - name: "World Trade Center"
+    popularity: 0.4
+  - name: "Air Force"
+    popularity: 0.4
+  - name: "Brooklyn"
+    popularity: 0.4
+  - name: "North Carolina"
+    popularity: 0.4
+  - name: "Raleigh"
+    popularity: 0.4
+  - name: "Manhattan"
+    popularity: 0.4
+  - name: "New York"
+    popularity: 0.5
+  - name: "Family Responsibility"
+    popularity: 0.4
+  - name: "Boys and Girls Club"
+    popularity: 0.4
+  - name: "Charlotte"
+    popularity: 0.4
+  - name: "Weather Events"
+    popularity: 0.3
+  - name: "Africa"
+    popularity: 0.3
+  - name: "Travel"
+    popularity: 0.3
+  - name: "Cultural Misrepresentation"
+    popularity: 0.3
+  - name: "Historical Exploration"
+    popularity: 0.3
+  - name: "Church Life"
+    popularity: 0.3
+  - name: "Southern Cooking"
+    popularity: 0.3
+  - name: "Rural Life"
+    popularity: 0.3
+  - name: "Community Sharing"
+    popularity: 0.3
+  - name: "Faith"
+    popularity: 0.3
+  - name: "Music"
+    popularity: 0.3
+  - name: "Segregation"
+    popularity: 0.3
+  - name: "Poverty"
+    popularity: 0.3
+  - name: "South Carolina"
+    popularity: 0.4
+
+people:
+  - name: "Deborah Ragan McCoy"
+    popularity: 1.0
+  - name: "Gladys M. Williams"
+    popularity: 1.0
+  - name: "Sharon McDuffie"
+    popularity: 1.0
+  - name: "Ty McDuffie"
+    popularity: 1.0
+  - name: "Sharon Burwell McDuffie"
+    popularity: 1.0
+  - name: "Irene Clark"
+    popularity: 1.0
+  - name: "Dr. Oliver T. Reid"
+    popularity: 1.0
+  - name: "Rickey Gerard Thomas"
+    popularity: 1.0
+  - name: "Lynette Richardson"
+    popularity: 1.0
+  - name: "David E. Reid"
+    popularity: 1.0
+  - name: "Michael Jerome Thompson"
+    popularity: 1.0
