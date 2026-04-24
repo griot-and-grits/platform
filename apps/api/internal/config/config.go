@@ -19,11 +19,15 @@ type Config struct {
 }
 
 type ServerConfig struct {
-	Port            int           `mapstructure:"port"`
-	ReadTimeout     time.Duration `mapstructure:"read_timeout"`
-	WriteTimeout    time.Duration `mapstructure:"write_timeout"`
-	ShutdownTimeout time.Duration `mapstructure:"shutdown_timeout"`
-	MaxUploadSize   int64         `mapstructure:"max_upload_size"`
+	Port              int           `mapstructure:"port"`
+	ReadTimeout       time.Duration `mapstructure:"read_timeout"`
+	ReadHeaderTimeout time.Duration `mapstructure:"read_header_timeout"`
+	WriteTimeout      time.Duration `mapstructure:"write_timeout"`
+	IdleTimeout       time.Duration `mapstructure:"idle_timeout"`
+	ShutdownTimeout   time.Duration `mapstructure:"shutdown_timeout"`
+	MaxUploadSize     int64         `mapstructure:"max_upload_size"`
+	MaxHeaderBytes    int           `mapstructure:"max_header_bytes"`
+	MaxJSONBodyBytes  int64         `mapstructure:"max_json_body_bytes"`
 }
 
 type DatabaseConfig struct {
@@ -81,9 +85,13 @@ func Load() (*Config, error) {
 	// Server
 	v.SetDefault("server.port", 8009)
 	v.SetDefault("server.read_timeout", 30*time.Second)
+	v.SetDefault("server.read_header_timeout", 10*time.Second)
 	v.SetDefault("server.write_timeout", 5*time.Minute)
+	v.SetDefault("server.idle_timeout", 120*time.Second)
 	v.SetDefault("server.shutdown_timeout", 15*time.Second)
 	v.SetDefault("server.max_upload_size", 100*1024*1024) // 100MB
+	v.SetDefault("server.max_header_bytes", 1<<20)        // 1MB
+	v.SetDefault("server.max_json_body_bytes", 1<<20)     // 1MB
 
 	// Database
 	v.SetDefault("db.uri", "mongodb://localhost:6732/")
@@ -139,9 +147,13 @@ func bindEnvs(v *viper.Viper) {
 		"environment":                      "ENVIRONMENT",
 		"server.port":                      "SERVER_PORT",
 		"server.read_timeout":              "SERVER_READ_TIMEOUT",
+		"server.read_header_timeout":       "SERVER_READ_HEADER_TIMEOUT",
 		"server.write_timeout":             "SERVER_WRITE_TIMEOUT",
+		"server.idle_timeout":              "SERVER_IDLE_TIMEOUT",
 		"server.shutdown_timeout":          "SERVER_SHUTDOWN_TIMEOUT",
 		"server.max_upload_size":           "SERVER_MAX_UPLOAD_SIZE",
+		"server.max_header_bytes":          "SERVER_MAX_HEADER_BYTES",
+		"server.max_json_body_bytes":       "SERVER_MAX_JSON_BODY_BYTES",
 		"db.uri":                           "DB_URI",
 		"db.name":                          "DB_NAME",
 		"db.max_pool_size":                 "DB_MAX_POOL_SIZE",

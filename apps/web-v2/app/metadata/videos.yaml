@@ -1,0 +1,354 @@
+videos:
+  - id: "mE7xK2qR9Ld"
+    thumbnail: "https://res.cloudinary.com/ducxigdil/image/upload/v1739667555/Screenshot_62_wjthuw.png"
+    title: "Irene Clark — Chapter One: Black Prisoner Cadavers"
+    interviewees:
+      - "Irene Clark"
+    description: "Irene Clark examines the historical use of black prisoners' cadavers in medical schools without family consent. This legal practice primarily benefited white institutions while restricting white cadavers from black schools."
+    duration: "3:00"
+    createdDate: "2024-08-25T13:10:00Z"
+    videoUrl: "https://www.youtube.com/watch?v=mE1PTJeDBXI"
+    featured: false
+    historicalContext:
+      - year: 1926
+        location:
+          name: "United States"
+          coordinates: [39.8283, -98.5795]
+    tags:
+      - "Medical History"
+      - "Prison System"
+      - "Racial Injustice"
+      - "Medical Ethics"
+      - "Historical Exploitation"
+    people:
+      - "Irene Clark"
+
+  - id: "Bw5yP8vV3mN"
+    thumbnail: "https://res.cloudinary.com/ducxigdil/image/upload/v1739470989/image_vfqft9.png"
+    title: "The Storied Life of Ms. Gladys M. Williams"
+    interviewees:
+      - "Gladys M. Williams"
+    description: "Gladys Williams shares her journey from her early years in Washington, North Carolina, to her experiences in Brooklyn and beyond. She reflects on her dedication to work, education, and personal values, emphasizing resilience and integrity."
+    duration: "12:56"
+    createdDate: "2023-09-14T10:25:00Z"
+    videoUrl: "https://www.youtube.com/watch?v=Bwk5yovVvmM"
+    featured: true
+    historicalContext:
+      - year: 1924
+        location:
+          name: "Washington, North Carolina"
+          coordinates: [35.5468, -77.0522]
+      - year: 1960
+        location:
+          name: "Brooklyn, New York"
+          coordinates: [40.6782, -73.9442]
+    tags:
+      - "Personal Stories"
+      - "Work & Employment"
+      - "Education"
+      - "Resilience"
+      - "Brooklyn"
+      - "New York"
+      - "North Carolina"
+      - "Migration"
+    people:
+      - "Gladys M. Williams"
+
+  - id: "nD9r6Y_lPXz"
+    thumbnail: "https://img.youtube.com/vi/9Nwl-6DRPYI/0.jpg"
+    title: "Deborah Ragan McCoy"
+    interviewees:
+      - "Deborah Ragan McCoy"
+    description: "Deborah McCoy reflects on her life, starting with her birth in Philadelphia, Pennsylvania in 1949. She explains how she got her name and shares various names she has been called, including Debbie and Elder Deb."
+    duration: "3:27"
+    createdDate: "2024-10-03T16:30:00Z"
+    videoUrl: "https://www.youtube.com/watch?v=9Nwl-6DRPYI"
+    featured: false
+    historicalContext:
+      - year: 1949
+        location:
+          name: "Philadelphia, Pennsylvania"
+          coordinates: [39.9526, -75.1652]
+    tags:
+      - "Philadelphia"
+      - "Personal Stories"
+      - "Name Origins"
+      - "1949"
+      - "Elder"
+      - "Family History"
+      - "Identity"
+    people:
+      - "Deborah Ragan McCoy"
+
+  - id: "hR2k4ie8lYm"
+    thumbnail: "https://res.cloudinary.com/ducxigdil/image/upload/v1739667554/Screenshot_61_e3jz6q.png"
+    title: "Sharon McDuffie Recalls 911"
+    interviewees:
+      - "Sharon McDuffie"
+    description: "On the morning of September 11, 2001, she awoke in Raleigh, North Carolina, to the shocking news of a plane crashing into the World Trade Center. As a second plane struck, confirming the attack, a sense of urgency and fear set in."
+    duration: "9:36"
+    createdDate: "2024-11-17T08:45:00Z"
+    videoUrl: "https://www.youtube.com/watch?v=meR02ie2lYg"
+    featured: false
+    historicalContext:
+      - year: 2001
+        location:
+          name: "Raleigh, North Carolina"
+          coordinates: [35.7796, -78.6382]
+      - year: 2001
+        location:
+          name: "New York, New York"
+          coordinates: [40.7128, -74.0060]
+    tags:
+      - "September 11"
+      - "Raleigh"
+      - "World Trade Center"
+      - "Personal Stories"
+      - "Historical Events"
+    people:
+      - "Sharon McDuffie"
+
+  - id: "vH1a8RhP0Oo"
+    thumbnail: "https://img.youtube.com/vi/1veIaRHpYO0/0.jpg"
+    title: "Ty McDuffie Remembers Meeting His Wife"
+    interviewees:
+      - "Ty McDuffie"
+    description: "Ty McDuffie, founder of Griot and Grits, shares his personal story about meeting his wife, Sharon Burwell McDuffie, just before Air Force basic training at a MEPS station. They were assigned different flights but managed to connect by passing notes."
+    duration: "3:16"
+    createdDate: "2024-12-08T14:20:00Z"
+    videoUrl: "https://www.youtube.com/watch?v=1veIaRHpYO0"
+    featured: false
+    historicalContext:
+      - year: 1992
+        location:
+          name: "United States"
+          coordinates: [39.8283, -98.5795]
+    tags:
+      - "Love Stories"
+      - "Air Force"
+      - "Military Service"
+      - "MEPS"
+      - "Founder Stories"
+      - "Personal Stories"
+    people:
+      - "Ty McDuffie"
+      - "Sharon Burwell McDuffie"
+
+  - id: "Wy3d0Hwc7iA"
+    thumbnail: "https://img.youtube.com/vi/Wygd0hwc7iA/0.jpg"
+    title: "Deborah McCoy Recalls a Historic Snowstorm"
+    interviewees:
+      - "Deborah Ragan McCoy"
+    description: "At just 10 years old, Deborah Ragan McCoy found herself babysitting her aunt's six children in West Philadelphia—a responsibility far beyond her years. As the evening wore on, an approaching snowstorm made her eager to get home. Determined, she braved the bitter cold and deepening snow, embarking on an arduous four-hour trek."
+    duration: "5:14"
+    createdDate: "2025-01-12T12:15:00Z"
+    videoUrl: "https://www.youtube.com/watch?v=Wygd0hwc7iA"
+    featured: false
+    historicalContext:
+      - year: 1958
+        location:
+          name: "West Philadelphia, Pennsylvania"
+          coordinates: [39.9526, -75.1652]
+    tags:
+      - "Childhood"
+      - "Philadelphia"
+      - "Snowstorm"
+      - "Babysitting"
+      - "Resilience"
+      - "Family Responsibility"
+      - "Weather Events"
+    people:
+      - "Deborah Ragan McCoy"
+
+  - id: "Y4xON7_lXUe"
+    thumbnail: "https://img.youtube.com/vi/Y48ON7_lUXE/0.jpg"
+    title: "Dr. Oliver T. Reid — Chapter One: Growing Up Between Danger and Sanctuary"
+    interviewees:
+      - "Dr. Oliver T. Reid"
+    description: "Dr. Oliver T. Reid reflects on the complicated journey of growing into his own name, sharing how \"Oliver\" once felt like a burden until he uncovered the powerful legacy behind it—a grandfather who rose from enslavement to reclaim the very land his family once worked. He traces the nicknames that marked different chapters of his life, the move from Concord to Charlotte in North Carolina, and the Boys and Girls Club that became a rare place of safety and belonging during a turbulent childhood. Through heritage, hardship, and the people who held him up, he tells the story of learning to take pride in the name he once rejected. This is Chapter One of Oliver's story. More chapters coming soon."
+    duration: "4:39"
+    createdDate: "2026-01-31T12:00:00Z"
+    videoUrl: "https://www.youtube.com/watch?v=Y48ON7_lUXE"
+    podcastUrl: "https://open.spotify.com/episode/02DSQX5xtuqWzL70nWdzRD?si=7c6e581980ae4b67"
+    featured: true
+    historicalContext:
+      - location:
+          name: "Concord, North Carolina"
+          coordinates: [35.4089, -80.5816]
+      - year: 1980
+        location:
+          name: "Charlotte, North Carolina"
+          coordinates: [35.2271, -80.8431]
+    tags:
+      - "North Carolina"
+      - "Charlotte"
+      - "Boys and Girls Club"
+      - "Childhood"
+      - "Heritage"
+      - "Personal Stories"
+      - "Resilience"
+    people:
+      - "Dr. Oliver T. Reid"
+
+  - id: "Ue1a7sw8xW0"
+    thumbnail: "https://img.youtube.com/vi/Uea17sw8xW0/0.jpg"
+    title: "Rickey Thomas — Chapter One: Roots, Work, and Quiet Strength"
+    interviewees:
+      - "Rickey Gerard Thomas"
+    description: "Rickey Gerard Thomas reflects on his upbringing in Brooklyn as the son of Southern parents who built a new life after meeting at the Brooklyn Navy Yard. He describes his father’s influence as a hardworking Navy veteran–turned–plumber whose consistency shaped Rickey’s own quiet, steady approach to life. The interview traces the dynamics of a large family, the personalities of his siblings, and the lessons absorbed from watching people work, study, and find their way. Woven through his memories is a sense of place—how the streets, the block, and the rhythm of New York instilled awareness, resilience, and a belief that true character shows itself through everyday consistency. This is Chapter One of Rickey's story. More chapters coming soon."
+    duration: "6:20"
+    createdDate: "2026-02-09T12:00:00Z"
+    videoUrl: "https://www.youtube.com/watch?v=Uea17sw8xW0"
+    podcastUrl: "https://open.spotify.com/episode/5MJzmnOw8C2sy0yw3URK5k?si=UcYW5o3eQf66FOUBLU7A5g"
+    featured: false
+    historicalContext:
+      - location:
+          name: "Raleigh, North Carolina"
+          coordinates: [35.7721, -78.6386]
+      - location:
+          name: "Miami, Florida"
+          coordinates: [25.761681, -80.191788]
+      - location:
+          name: "Fort Lauderdale, Florida"
+          coordinates: [26.12231, -80.14338]
+      - year: 1954
+        location:
+          name: "Brooklyn, New York"
+          coordinates: [40.6501, -73.9496]
+    tags:
+      - "North Carolina"
+      - "Raleigh"
+      - "Brooklyn"
+      - "New York"
+      - "Boys and Girls Club"
+      - "Childhood"
+      - "Heritage"
+      - "Personal Stories"
+      - "Resilience"
+      - "Family History"
+      - "Migration"
+      - "Work & Employment"
+      - "Military Service"
+    people:
+      - "Rickey Gerard Thomas"
+
+  - id: "Ln2yR8iCh4d"
+    thumbnail: "https://img.youtube.com/vi/mBngYEV7_cc/0.jpg"
+    title: "Lynette Richardson — Chapter One: The Lessons of Home and the Lower East Side"
+    interviewees:
+      - "Lynette Richardson"
+    description: "Lynette Richardson reflects on a childhood shaped by the warmth, discipline, and creativity of her family on Manhattan’s Lower East Side, where home was defined less by geography and more by the people who taught her how to see the world. She describes a community anchored by steady work—school crossing guards, construction crews, taxi drivers—and a mother whose presence and purpose set the rhythm of her early life. Through memories of neighborhood jobs, school influences, and the cultural lessons woven into daily life, Lynette traces how her upbringing instilled resilience, identity, and a deep sense of belonging. Her story reveals how family, community, and place become the map one follows long after childhood ends. This is Chapter One of Lynette's story. More chapters coming soon."
+    duration: "4:32"
+    createdDate: "2026-02-18T12:00:00Z"
+    videoUrl: "https://www.youtube.com/watch?v=mBngYEV7_cc"
+    podcastUrl: "https://open.spotify.com/episode/4o9wuMJ0dLzBMHydGxRlGh?si=TLiqo-3bTKKKfNK966uqRw"
+    featured: true
+    historicalContext:
+      - year: 1980
+        location:
+          name: "Lower East Side, Manhattan, New York"
+          coordinates: [40.715, -73.985]
+    tags:
+      - "Childhood"
+      - "Heritage"
+      - "Personal Stories"
+      - "Work & Employment"
+      - "Family History"
+      - "Manhattan"
+      - "New York"
+    people:
+      - "Lynette Richardson"
+
+  - id: "Cr2AfR8iCa9"
+    thumbnail: "https://img.youtube.com/vi/DIwtQ9tLfa0/0.jpg"
+    title: "Irene Clark — Chapter Two: Confronting the Stereotypes of Africa"
+    interviewees:
+      - "Irene Clark"
+    description: "Irene Clark reflects on how misinformation and stigma have long distorted Western views of Africa, from travel ads that separate Egypt from the continent to the fearful stereotypes echoed by earlier generations. She contrasts those narratives with her own travels across Egypt, Ethiopia, Eritrea, Swaziland, and South Africa, where she witnessed modern cities, deep ingenuity, and a living history far richer than outsiders imagine. Her story underscores the power of seeing Africa firsthand and the profound impact of standing in places like the slave castles, where history becomes impossible to ignore."
+    duration: "3:28"
+    createdDate: "2026-02-25T12:00:00Z"
+    videoUrl: "https://www.youtube.com/watch?v=DIwtQ9tLfa0"
+    podcastUrl: "https://open.spotify.com/episode/6VjeQAGOQAIPaEo9uAyrVB?si=f3UsWjiXRtyCJo4UsBJhbg"
+    featured: true
+    historicalContext:
+      - year: 1970
+        location:
+          name: "Africa"
+          coordinates: [28.0, 10.0]
+    tags:
+      - "Africa"
+      - "Heritage"
+      - "Personal Stories"
+      - "Migration"
+      - "Historical Exploration"
+      - "Education"
+      - "Cultural Misrepresentation"
+      - "Travel"
+    people:
+      - "Irene Clark"
+
+  - id: "q7F2mX9BLaP"
+    thumbnail: "https://img.youtube.com/vi/gDF5Soer0is/0.jpg"
+    title: "David E. Reid — Chapter One: Growing Up with Faith, Family, and Southern Traditions"
+    interviewees:
+      - "David E. Reid"
+    description: "David E. Reid reflects on his upbringing in Reidsville, North Carolina, where he was raised by his mother and grandmother after his father left during his early childhood. He describes a tight‑knit, church‑centered household rooted in modest means, homegrown food, and shared community values. His memories center on the women who shaped him—especially through cooking, compassion, and lessons about doing good for others. Now 84, he looks back with warmth on the foods, traditions, and moral grounding that defined his early life and continue to guide his character today."
+    duration: "5:01"
+    createdDate: "2026-03-07T12:00:00Z"
+    videoUrl: "https://www.youtube.com/watch?v=gDF5Soer0is"
+    podcastUrl: "https://open.spotify.com/episode/2OqMFHM7zLTcK8LtNOAJql?si=rWen3jJrQMOSskKFY3Quog"
+    featured: true
+    historicalContext:
+      - year: 1940
+        location:
+          name: "Reidsville, North Carolina"
+          coordinates: [36.35486, -79.66447]
+    tags:
+      - "Reidsville"
+      - "North Carolina"
+      - "Personal Stories"
+      - "Childhood"
+      - "Family History"
+      - "Family Responsibility"
+      - "Heritage"
+      - "Church Life"
+      - "Southern Cooking"
+      - "Rural Life"
+      - "Community Sharing"
+    people:
+      - "David E. Reid"
+
+  - id: "X4m9Tq2RbLA"
+    thumbnail: "https://img.youtube.com/vi/Ud1XFjHrULc/0.jpg"
+    title: "Michael Jerome Thompson — Chapter One: Rock Hill Roots and a Family of Gospel Voices"
+    interviewees:
+      - "Michael Jerome Thompson"
+    description: "Michael Jerome Thompson reflects on his upbringing in 1950s Rock Hill, South Carolina, a small, segregated but close‑knit “village” where poverty was shared and childhood felt safe. Raised by his deeply spiritual mother, Estelle, after his father left, Michael grew up surrounded by music, family, and the legacy of gospel singers like his grandfather from the Dixie Hummingbirds. His story traces a journey from rural roots to the working world of Charlotte and later Washington, D.C., where he navigated identity, hardship, and reinvention. Through it all, he carries the meaning of his name — “one who is like God” — as a reminder of the resilience and faith that shaped his life."
+    duration: "4:44"
+    createdDate: "2026-03-19T12:00:00Z"
+    videoUrl: "https://www.youtube.com/watch?v=Ud1XFjHrULc"
+    featured: true
+    historicalContext:
+      - year: 1955
+        location:
+          name: "Rock Hill, South Carolina"
+          coordinates: [34.924866, -81.025078]
+      - location:
+          name: "Charlotte, North Carolina"
+          coordinates: [35.227085, -80.843124]
+    tags:
+      - "Rock Hill"
+      - "South Carolina"
+      - "Personal Stories"
+      - "Childhood"
+      - "Family History"
+      - "Segregation"
+      - "Poverty"
+      - "Community"
+      - "Gospel"
+      - "Music"
+      - "Faith"
+      - "Rural Life"
+      - "Childhood"
+    people:
+      - "Michael Jerome Thompson"

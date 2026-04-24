@@ -15,12 +15,19 @@ import (
 )
 
 type ArtifactHandler struct {
-	ingestion *service.IngestionService
-	repo      port.ArtifactRepo
+	ingestion        *service.IngestionService
+	repo             port.ArtifactRepo
+	maxUploadBytes   int64
+	maxJSONBodyBytes int64
 }
 
-func NewArtifactHandler(ingestion *service.IngestionService, repo port.ArtifactRepo) *ArtifactHandler {
-	return &ArtifactHandler{ingestion: ingestion, repo: repo}
+func NewArtifactHandler(ingestion *service.IngestionService, repo port.ArtifactRepo, maxUploadBytes, maxJSONBodyBytes int64) *ArtifactHandler {
+	return &ArtifactHandler{
+		ingestion:        ingestion,
+		repo:             repo,
+		maxUploadBytes:   maxUploadBytes,
+		maxJSONBodyBytes: maxJSONBodyBytes,
+	}
 }
 
 // Ingest handles Path A: streaming multipart upload.
@@ -31,6 +38,10 @@ func (h *ArtifactHandler) Ingest(w http.ResponseWriter, r *http.Request) {
 	if err != nil || !strings.HasPrefix(mediaType, "multipart/") {
 		writeError(w, http.StatusBadRequest, "Content-Type must be multipart/form-data")
 		return
+	}
+
+	if h.maxUploadBytes > 0 {
+		r.Body = http.MaxBytesReader(w, r.Body, h.maxUploadBytes)
 	}
 
 	reader := multipart.NewReader(r.Body, params["boundary"])
@@ -96,6 +107,9 @@ func (h *ArtifactHandler) Ingest(w http.ResponseWriter, r *http.Request) {
 
 // RequestUploadURL handles Path B step 1: presigned URL for large files.
 func (h *ArtifactHandler) RequestUploadURL(w http.ResponseWriter, r *http.Request) {
+	if h.maxJSONBodyBytes > 0 {
+		r.Body = http.MaxBytesReader(w, r.Body, h.maxJSONBodyBytes)
+	}
 	var req domain.UploadURLRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		writeError(w, http.StatusBadRequest, "Invalid request body: "+err.Error())

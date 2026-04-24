@@ -88,6 +88,14 @@ func (w *statusWriter) WriteHeader(code int) {
 	w.ResponseWriter.WriteHeader(code)
 }
 
+// Flush passes through to the underlying ResponseWriter if it implements http.Flusher.
+// Required so that wrapped streaming responses (SSE, chunked) still flush.
+func (w *statusWriter) Flush() {
+	if f, ok := w.ResponseWriter.(http.Flusher); ok {
+		f.Flush()
+	}
+}
+
 func generateID() string {
 	b := make([]byte, 8)
 	_, _ = rand.Read(b)
