@@ -1,25 +1,22 @@
-name: Deploy Frontend
+name: Deploy Web (Workers)
 
 on:
   push:
     branches: [main]
     paths:
       - 'apps/web/**'
-      - 'deploy/cloudflare/**'
+      - '.github/workflows/deploy-web.yml'
   pull_request:
     branches: [main]
     paths:
       - 'apps/web/**'
-      - 'deploy/cloudflare/**'
+      - '.github/workflows/deploy-web.yml'
   workflow_dispatch:
 
 jobs:
-  deploy:
+  build:
+    name: Build & typecheck
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      deployments: write
-
     steps:
       - uses: actions/checkout@v4
 
@@ -33,17 +30,51 @@ jobs:
         run: npm ci
         working-directory: apps/web
 
-      - name: Build for Cloudflare
-        run: npm run build:cloudflare
+      - name: Build
+        run: npm run build
         working-directory: apps/web
         env:
+          VITE_PUBLIC_API_BASE_URL: ${{ vars.PUBLIC_API_BASE_URL }}
           NEXT_PUBLIC_ADMIN_API_BASE_URL: ${{ vars.ADMIN_API_BASE_URL }}
 
-      - name: Deploy to Cloudflare Pages
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: apps/web/build
+          retention-days: 1
+
+  deploy:
+    name: Deploy to Cloudflare Workers
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: apps/web
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: web-build
+          path: apps/web/build
+
+      - name: Deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: apps/web
-          wranglerVersion: "3"
-          command: pages deploy .open-next/cloudflare --project-name=gng-web --branch=${{ github.head_ref || github.ref_name }}
+          command: deploy

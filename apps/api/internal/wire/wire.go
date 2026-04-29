@@ -66,12 +66,18 @@ func Initialize(ctx context.Context, cfg *config.Config, logger *slog.Logger) (*
 		logger,
 	)
 
+	// Auth + integrations
+	authSvc := service.NewAuthService(cfg.Auth)
+	integrationsSvc := service.NewIntegrationsService(cfg.Integrations)
+
 	// Handlers
 	artifactHandler := handler.NewArtifactHandler(ingestionSvc, artifactRepo, cfg.Server.MaxUploadSize, cfg.Server.MaxJSONBodyBytes)
 	preservationHandler := handler.NewPreservationHandler(preservationSvc)
 	collectionHandler := handler.NewCollectionHandler()
 	healthHandler := handler.NewHealthHandler(cfg)
 	pipelineCallbackHandler := handler.NewPipelineCallbackHandler(pipelineHandlerSvc, cfg.Pipeline.CallbackSecret, cfg.Server.MaxJSONBodyBytes)
+	authHandler := handler.NewAuthHandler(authSvc, cfg.Auth.PublicBaseURL, cfg.Auth.DefaultRedirect, logger)
+	integrationsHandler := handler.NewIntegrationsHandler(integrationsSvc, logger)
 
 	// Router
 	router := handler.NewRouter(
@@ -80,6 +86,8 @@ func Initialize(ctx context.Context, cfg *config.Config, logger *slog.Logger) (*
 		collectionHandler,
 		healthHandler,
 		pipelineCallbackHandler,
+		authHandler,
+		integrationsHandler,
 		cfg.CORS.AllowedOrigins,
 		logger,
 	)

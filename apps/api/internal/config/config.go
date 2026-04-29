@@ -8,14 +8,16 @@ import (
 )
 
 type Config struct {
-	Environment string           `mapstructure:"environment"`
-	Server      ServerConfig     `mapstructure:"server"`
-	Database    DatabaseConfig   `mapstructure:"db"`
-	Storage     StorageConfig    `mapstructure:"storage"`
-	Archive     ArchiveConfig    `mapstructure:"archive"`
-	CORS        CORSConfig       `mapstructure:"cors"`
-	Processing  ProcessingConfig `mapstructure:"processing"`
-	Pipeline    PipelineConfig   `mapstructure:"pipeline"`
+	Environment  string             `mapstructure:"environment"`
+	Server       ServerConfig       `mapstructure:"server"`
+	Database     DatabaseConfig     `mapstructure:"db"`
+	Storage      StorageConfig      `mapstructure:"storage"`
+	Archive      ArchiveConfig      `mapstructure:"archive"`
+	CORS         CORSConfig         `mapstructure:"cors"`
+	Processing   ProcessingConfig   `mapstructure:"processing"`
+	Pipeline     PipelineConfig     `mapstructure:"pipeline"`
+	Auth         AuthConfig         `mapstructure:"auth"`
+	Integrations IntegrationsConfig `mapstructure:"integrations"`
 }
 
 type ServerConfig struct {
@@ -74,6 +76,29 @@ type PipelineConfig struct {
 	CallbackURL    string `mapstructure:"callback_url"`
 }
 
+type AuthConfig struct {
+	Secret              string `mapstructure:"secret"`
+	GitHubClientID      string `mapstructure:"github_client_id"`
+	GitHubClientSecret  string `mapstructure:"github_client_secret"`
+	AllowedEmails       string `mapstructure:"allowed_emails"`
+	AllowedGitHubLogins string `mapstructure:"allowed_github_logins"`
+	AllowedGitHubOrg    string `mapstructure:"allowed_github_org"`
+	DevBypass           bool   `mapstructure:"dev_bypass"`
+	DevToken            string `mapstructure:"dev_token"`
+	CookieDomain        string `mapstructure:"cookie_domain"`
+	CookieSecure        bool   `mapstructure:"cookie_secure"`
+	PublicBaseURL       string `mapstructure:"public_base_url"`
+	DefaultRedirect     string `mapstructure:"default_redirect"`
+}
+
+type IntegrationsConfig struct {
+	MailchimpAPIKey      string `mapstructure:"mailchimp_api_key"`
+	MailchimpServer      string `mapstructure:"mailchimp_server"`
+	MailchimpAudienceID  string `mapstructure:"mailchimp_audience_id"`
+	GoFundMeClientID     string `mapstructure:"gofundme_client_id"`
+	GoFundMeClientSecret string `mapstructure:"gofundme_client_secret"`
+}
+
 func Load() (*Config, error) {
 	v := viper.New()
 	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
@@ -125,6 +150,17 @@ func Load() (*Config, error) {
 	v.SetDefault("pipeline.redis_url", "redis://localhost:6735/0")
 	v.SetDefault("pipeline.callback_secret", "dev-secret-change-me")
 	v.SetDefault("pipeline.callback_url", "http://localhost:6731")
+
+	// Auth
+	v.SetDefault("auth.secret", "dev-secret-change-me")
+	v.SetDefault("auth.dev_bypass", false)
+	v.SetDefault("auth.cookie_secure", false)
+	v.SetDefault("auth.public_base_url", "http://localhost:6731")
+	v.SetDefault("auth.default_redirect", "http://localhost:6730/admin")
+
+	// Integrations
+	v.SetDefault("integrations.mailchimp_api_key", "")
+	v.SetDefault("integrations.gofundme_client_id", "")
 
 	// Bind env vars with explicit prefixes to match the flat env var naming
 	bindEnvs(v)
@@ -179,6 +215,23 @@ func bindEnvs(v *viper.Viper) {
 		"pipeline.redis_url":               "REDIS_URL",
 		"pipeline.callback_secret":         "PIPELINE_CALLBACK_SECRET",
 		"pipeline.callback_url":            "PIPELINE_CALLBACK_URL",
+		"auth.secret":                      "AUTH_SECRET",
+		"auth.github_client_id":            "GITHUB_CLIENT_ID",
+		"auth.github_client_secret":        "GITHUB_CLIENT_SECRET",
+		"auth.allowed_emails":              "ADMIN_ALLOWED_EMAILS",
+		"auth.allowed_github_logins":       "ADMIN_ALLOWED_GITHUB_LOGINS",
+		"auth.allowed_github_org":          "ADMIN_ALLOWED_GITHUB_ORG",
+		"auth.dev_bypass":                  "ADMIN_DEV_BYPASS",
+		"auth.dev_token":                   "ADMIN_DEV_TOKEN",
+		"auth.cookie_domain":               "AUTH_COOKIE_DOMAIN",
+		"auth.cookie_secure":               "AUTH_COOKIE_SECURE",
+		"auth.public_base_url":             "AUTH_PUBLIC_BASE_URL",
+		"auth.default_redirect":            "AUTH_DEFAULT_REDIRECT",
+		"integrations.mailchimp_api_key":   "MAILCHIMP_API_KEY",
+		"integrations.mailchimp_server":    "MAILCHIMP_API_SERVER",
+		"integrations.mailchimp_audience_id": "MAILCHIMP_AUDIENCE_ID",
+		"integrations.gofundme_client_id":  "GOFUNDME_CLIENT_ID",
+		"integrations.gofundme_client_secret": "GOFUNDME_CLIENT_SECRET",
 	}
 	for key, env := range bindings {
 		_ = v.BindEnv(key, env)

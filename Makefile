@@ -1,5 +1,6 @@
 .PHONY: dev dev-ai api web worker test test-api lint lint-api build deploy deploy-web deploy-k8s clean seed spec
 
+
 # ─── Primary targets ───────────────────────────────────────────────────────────
 
 ## Start everything (api, web, worker, mongo, minio, redis)
@@ -48,13 +49,9 @@ build:
 
 # ─── Deploy ────────────────────────────────────────────────────────────────────
 
-## Deploy frontend to Cloudflare Pages
+## Deploy frontend to Cloudflare Workers
 deploy-web:
-	cd apps/web && npm run build:cloudflare && npm run deploy
-
-## Deploy frontend preview (PR / staging)
-deploy-web-preview:
-	cd apps/web && npm run build:cloudflare && npm run deploy:preview
+	cd apps/web && npm run deploy
 
 ## Deploy to OpenShift/K8s (production overlay)
 deploy-k8s:

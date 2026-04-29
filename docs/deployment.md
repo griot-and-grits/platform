@@ -6,12 +6,12 @@ Two deployment targets — Cloudflare for the frontend, OpenShift for everything
 
 ```
                     ┌─────────────────────────┐
-                    │    Cloudflare Pages      │
-                    │    (Edge / Global CDN)   │
-                    │                          │
-                    │    Next.js frontend      │
-                    │    via @opennextjs/cf     │
-                    └────────────┬─────────────┘
+                    │   Cloudflare Workers    │
+                    │   (Edge / Global CDN)   │
+                    │                         │
+                    │   React Router 7 SSR    │
+                    │   + static assets       │
+                    └────────────┬────────────┘
                                  │
                                  │ HTTPS
                                  ▼
@@ -31,64 +31,63 @@ Two deployment targets — Cloudflare for the frontend, OpenShift for everything
 
 | Component | Platform | Why |
 |-----------|----------|-----|
-| Frontend | Cloudflare Pages | Edge SSR, global CDN, zero cold starts, no Node server to manage |
+| Frontend | Cloudflare Workers | Edge SSR, global CDN, zero cold starts, no Node server to manage |
 | Go API | OpenShift | Needs direct access to MongoDB, MinIO, Redis (cluster-internal) |
 | Pipeline Worker | OpenShift | Needs FFmpeg, MinIO access, callback to API (cluster-internal) |
 | Whisper | OpenShift | Needs NVIDIA A100 GPU |
 | MongoDB, MinIO, Redis | OpenShift | Stateful services, persistent volumes |
 
-## Frontend — Cloudflare Pages
+## Frontend — Cloudflare Workers
 
-Uses `@opennextjs/cloudflare` to run Next.js on Cloudflare's edge runtime.
+React Router 7 (Vite) deployed to Cloudflare Workers with static assets.
 
 ### CI/CD (automatic)
 
 Deployments are handled by GitHub Actions (`.github/workflows/deploy-web.yml`):
 
-- **Push to `main`** touching `apps/web/` → builds with OpenNext adapter → deploys to Cloudflare Pages production
-- **Pull request** touching `apps/web/` → builds → deploys a preview URL (branch-based)
+- **Push to `main`** touching `apps/web/` → builds → deploys to Cloudflare Workers production
+- **Pull request** touching `apps/web/` → build verification only
 
-The workflow uses `cloudflare/wrangler-action` to push the built output.
+The workflow uses `cloudflare/wrangler-action` to push the built worker bundle and assets.
 
 ### Required GitHub secrets
 
 | Secret | Description |
 |--------|-------------|
-| `CLOUDFLARE_API_TOKEN` | Cloudflare API token with Pages edit permissions |
+| `CLOUDFLARE_API_TOKEN` | Cloudflare API token with Workers edit permissions |
 | `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account ID |
 
 ### Required GitHub variables
 
 | Variable | Description |
 |----------|-------------|
-| `ADMIN_API_BASE_URL` | Go API public URL (e.g., `https://api.griotandgrits.org`) |
+| `ADMIN_API_BASE_URL` | Go API URL used by server-side loaders (e.g., `https://api.griotandgrits.org`) |
+| `PUBLIC_API_BASE_URL` | Go API URL baked into the client bundle (typically same as above) |
 
 ### Manual deploy
 
 ```bash
 make deploy-web          # Production
-make deploy-web-preview  # Preview
 ```
 
 ### Local preview (Cloudflare runtime)
 
 ```bash
 cd apps/web
-npm run preview   # Runs wrangler pages dev locally
+npm run preview   # wrangler dev against the built bundle
 ```
 
 ### Config
 
-- Wrangler config: `deploy/cloudflare/wrangler.jsonc`
-- OpenNext config: `apps/web/open-next.config.ts`
-- Secrets (`AUTH_SECRET`, `GITHUB_CLIENT_ID`, etc.) are set in the Cloudflare dashboard or via `wrangler secret put`
+- Wrangler config: `apps/web/wrangler.jsonc` (Workers `main` + `assets`)
+- Auth + integration secrets (`AUTH_SECRET`, `GITHUB_CLIENT_ID`, `MAILCHIMP_API_KEY`, etc.) are read by the Go API, not the worker — set them on the API host (Fly.io / OpenShift), not via `wrangler secret put`.
 
 ### How it works
 
-1. `opennextjs-cloudflare build` compiles Next.js into a Cloudflare-compatible worker bundle
-2. Server components, API routes, and middleware all run on the edge
-3. Static assets are served from Cloudflare's CDN
-4. `NEXT_PUBLIC_ADMIN_API_BASE_URL` points at the Go API's public route on OpenShift
+1. `react-router build` produces `build/server/index.js` (worker entry) + `build/client/` (static assets)
+2. Wrangler bundles the worker and uploads assets to Cloudflare's CDN
+3. SSR loaders run on the edge; client components hydrate in the browser
+4. `NEXT_PUBLIC_ADMIN_API_BASE_URL` (server-side loaders) and `VITE_PUBLIC_API_BASE_URL` (client bundle) both point at the Go API on OpenShift
 
 ## Backend — OpenShift / Kubernetes
 

@@ -1,6 +1,6 @@
 # Griot and Grits Platform
 
-Digital preservation platform for African American history and culture. Go API + Next.js web app + Python AI pipelines.
+Digital preservation platform for African American history and culture. Go API + React Router 7 web app (Cloudflare Workers) + Python AI pipelines.
 
 ### Archived (to form monorepo):
 - https://github.com/griot-and-grits/gng-web
@@ -10,7 +10,7 @@ Digital preservation platform for African American history and culture. Go API +
 
 ```
 apps/api/       — Go backend (hexagonal architecture: domain, port, adapter, service, handler)
-apps/web/       — Next.js 15 frontend (App Router, TypeScript, Tailwind, Radix UI)
+apps/web/       — React Router 7 frontend (Vite, Cloudflare Workers, TypeScript, Tailwind, Radix UI)
 pipelines/      — Python workers for AI processing (transcription, metadata, enrichment)
 packages/       — Shared contracts (OpenAPI spec, generated types)
 deploy/         — Deployment configs
@@ -29,7 +29,7 @@ docs/           — Architecture docs and implementation plan
 ```bash
 make dev        # docker compose up (API, web, mongo, minio, redis, worker)
 make api        # Go API with hot reload
-make web        # Next.js dev server
+make web        # React Router dev server (Vite)
 make worker     # Python pipeline worker
 make test       # All tests
 make lint       # All linters
