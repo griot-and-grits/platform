@@ -1,4 +1,4 @@
-.PHONY: dev dev-ai api web worker test test-api lint lint-api build deploy deploy-web deploy-k8s clean seed spec
+.PHONY: dev dev-ai api web worker test test-api lint lint-api build deploy deploy-web deploy-k8s clean teardown seed spec
 
 
 # ─── Primary targets ───────────────────────────────────────────────────────────
@@ -74,3 +74,7 @@ spec:
 ## Stop all services and remove volumes
 clean:
 	docker compose --profile ai down -v
+
+## Tear down everything: containers, volumes, networks, and locally built images
+teardown:
+	docker compose --profile ai down -v --rmi local --remove-orphans

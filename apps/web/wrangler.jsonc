@@ -8,30 +8,42 @@
   },
   "main": "build/server/index.js",
 
-  // Default vars (used for `wrangler dev` and previews unless overridden by env).
-  // Loaders read these via process.env on the worker. Client-side code reads
-  // VITE_PUBLIC_API_BASE_URL which is baked in at build time, not from here.
+  // Server-side env (read in loaders/actions via context.cloudflare.env).
+  // Client-readable values use VITE_* and are baked in at build time, not here.
+  // Secrets go in via `wrangler secret put NAME --env <env>`.
   "vars": {
-    "NEXT_PUBLIC_ADMIN_API_BASE_URL": "https://api-dev.griotandgrits.org",
-    "ADMIN_DEV_BYPASS": "false"
+    "ADMIN_DEV_BYPASS": "false",
+    "ADMIN_AUTH_DISABLED": "false",
+    "FEATURE_ASK_THE_GRIOT": "false",
+    "FEATURE_GOFUNDME": "true",
+    "GOFUNDME_CAMPAIGN_ID": "731313",
+    "GOFUNDME_USE_EMBEDDED": "false",
+    "GOFUNDME_SHOW_TRACKER": "false"
   },
 
-  // Per-environment overrides. Deploy with `wrangler deploy --env production`.
-  // Worker secrets (none required today; auth/integration secrets live on the
-  // Go API host) would go in via `wrangler secret put NAME --env production`.
   "env": {
     "production": {
       "name": "gng-web",
       "vars": {
-        "NEXT_PUBLIC_ADMIN_API_BASE_URL": "https://api.griotandgrits.org",
-        "ADMIN_DEV_BYPASS": "false"
+        "ADMIN_DEV_BYPASS": "false",
+        "ADMIN_AUTH_DISABLED": "false",
+        "FEATURE_ASK_THE_GRIOT": "false",
+        "FEATURE_GOFUNDME": "true",
+        "GOFUNDME_CAMPAIGN_ID": "731313",
+        "GOFUNDME_USE_EMBEDDED": "false",
+        "GOFUNDME_SHOW_TRACKER": "false"
       }
     },
     "preview": {
       "name": "gng-web-preview",
       "vars": {
-        "NEXT_PUBLIC_ADMIN_API_BASE_URL": "https://api-dev.griotandgrits.org",
-        "ADMIN_DEV_BYPASS": "false"
+        "ADMIN_DEV_BYPASS": "false",
+        "ADMIN_AUTH_DISABLED": "false",
+        "FEATURE_ASK_THE_GRIOT": "false",
+        "FEATURE_GOFUNDME": "true",
+        "GOFUNDME_CAMPAIGN_ID": "731313",
+        "GOFUNDME_USE_EMBEDDED": "false",
+        "GOFUNDME_SHOW_TRACKER": "false"
       }
     }
   }

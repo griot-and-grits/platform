@@ -2,8 +2,9 @@ import { redirect } from "react-router";
 import { getSession, getLoginURL } from "~/lib/auth";
 import type { Route } from "./+types/sign-in";
 
-export async function loader({ request }: Route.LoaderArgs) {
-  const session = await getSession(request);
+export async function loader({ request, context }: Route.LoaderArgs) {
+  const env = context.cloudflare.env;
+  const session = await getSession(request, env);
   const url = new URL(request.url);
   const callbackUrl = url.searchParams.get("callbackUrl") || "/admin";
 
@@ -11,9 +12,9 @@ export async function loader({ request }: Route.LoaderArgs) {
     throw redirect(callbackUrl);
   }
 
-  const githubEnabled = Boolean(process.env.GITHUB_CLIENT_ID);
+  const githubEnabled = Boolean(env.GITHUB_CLIENT_ID);
   const devBypassEnabled =
-    process.env.ADMIN_DEV_BYPASS === "true" || !githubEnabled;
+    env.ADMIN_DEV_BYPASS === "true" || !githubEnabled;
 
   return { callbackUrl, githubEnabled, devBypassEnabled };
 }

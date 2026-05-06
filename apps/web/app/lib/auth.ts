@@ -1,4 +1,5 @@
 import { ADMIN_API_BASE_URL } from "./admin/config";
+import type { Env } from "./env";
 
 export interface Session {
   user: {
@@ -13,8 +14,8 @@ export interface Session {
  * Check if the request has a valid session by calling the Go API.
  * Returns the session data or null if not authenticated.
  */
-export async function getSession(request: Request): Promise<Session | null> {
-  if (process.env.ADMIN_AUTH_DISABLED === "true") {
+export async function getSession(request: Request, env: Env): Promise<Session | null> {
+  if (env.ADMIN_AUTH_DISABLED === "true") {
     return {
       user: {
         name: "Dev Admin",

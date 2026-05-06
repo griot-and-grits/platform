@@ -169,20 +169,16 @@ export interface GriotConfig {
 
 export const griotConfig: GriotConfig = {
     llm: {
-        provider: (process.env.NEXT_PUBLIC_LLM_PROVIDER as LLMProvider) || 'ollama',
-        baseUrl: process.env.NEXT_PUBLIC_LLM_BASE_URL || 'http://localhost:11434',
-        model: process.env.NEXT_PUBLIC_LLM_MODEL || 'llama3.2:1b',
-        timeout: parseInt(process.env.NEXT_PUBLIC_LLM_TIMEOUT || '120000'),
-        apiKey: process.env.NEXT_PUBLIC_LLM_API_KEY,
-        headers: process.env.NEXT_PUBLIC_LLM_HEADERS ? JSON.parse(process.env.NEXT_PUBLIC_LLM_HEADERS) : undefined,
+        provider: (import.meta.env.VITE_LLM_PROVIDER as LLMProvider) || 'ollama',
+        baseUrl: import.meta.env.VITE_LLM_BASE_URL || 'http://localhost:11434',
+        model: import.meta.env.VITE_LLM_MODEL || 'llama3.2:1b',
+        timeout: parseInt(import.meta.env.VITE_LLM_TIMEOUT || '120000'),
+        apiKey: import.meta.env.VITE_LLM_API_KEY,
+        headers: import.meta.env.VITE_LLM_HEADERS ? JSON.parse(import.meta.env.VITE_LLM_HEADERS) : undefined,
     },
     context: {
         filePath: '/griot-context.txt',
-        maxTokens: parseInt(process.env.NEXT_PUBLIC_CONTEXT_MAX_TOKENS || '4000'),
+        maxTokens: parseInt(import.meta.env.VITE_CONTEXT_MAX_TOKENS || '4000'),
     },
 }
 
-// GoFundMe OAuth configuration
-export const GOFUNDME_CLIENT_ID = process.env.GOFUNDME_CLIENT_ID || 'client_id';
-export const GOFUNDME_CLIENT_SECRET = process.env.GOFUNDME_CLIENT_SECRET || 'client_secret';
-export const GOFUNDME_REDIRECT_URI = process.env.GOFUNDME_REDIRECT_URI || 'http://localhost:3000/oauth/callback';

@@ -33,13 +33,14 @@ services:
     restart: unless-stopped
 
   web:
-    image: node:22-alpine
+    image: node:22-slim
     working_dir: /app
     command: sh -c "npm install && npm run dev -- --port 3000 --host 0.0.0.0"
     ports:
       - "6730:3000"
     environment:
-      NEXT_PUBLIC_ADMIN_API_BASE_URL: http://localhost:6731
+      VITE_ADMIN_API_BASE_URL: http://localhost:6731
+      VITE_API_BASE_URL: http://localhost:6731
       VITE_PUBLIC_API_BASE_URL: http://localhost:6731
     volumes:
       - ./apps/web:/app:z

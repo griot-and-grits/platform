@@ -3,7 +3,7 @@ import { AdminShell } from "~/components/admin/shell/admin-shell";
 import { getSession } from "~/lib/auth";
 import type { Route } from "./+types/layout";
 
-export async function loader({ request }: Route.LoaderArgs) {
+export async function loader({ request, context }: Route.LoaderArgs) {
   const url = new URL(request.url);
 
   // Don't require auth for sign-in page.
@@ -11,7 +11,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     return { session: null };
   }
 
-  const session = await getSession(request);
+  const session = await getSession(request, context.cloudflare.env);
   if (!session) {
     throw redirect(`/admin/sign-in?callbackUrl=${encodeURIComponent(url.pathname)}`);
   }

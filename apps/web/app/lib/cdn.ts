@@ -5,7 +5,7 @@
  * Assets are served from cdn.griotandgrits.org
  */
 
-const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL || 'https://cdn.griotandgrits.org';
+const CDN_URL = import.meta.env.VITE_CDN_URL || 'https://cdn.griotandgrits.org';
 
 /**
  * Generate CDN URL for a media asset

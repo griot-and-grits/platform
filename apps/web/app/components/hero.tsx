@@ -22,16 +22,6 @@ const Hero = () => {
             ease: "power2.out"
         });
 
-        // Animate side links
-        gsap.from(".side-link", {
-            x: -50,
-            opacity: 0,
-            stagger: 0.2,
-            duration: 0.8,
-            ease: "power2.out",
-            delay: 0.5
-        });
-
         // Animate social links
         gsap.from(".social-link", {
             x: 50,

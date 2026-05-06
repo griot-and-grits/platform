@@ -11,9 +11,9 @@ import { loadVideoMetadata } from "~/lib/load-metadata";
 import { getGoFundMeConfig } from "~/lib/feature-flags";
 import type { Route } from "./+types/home";
 
-export function loader() {
+export function loader({ context }: Route.LoaderArgs) {
   const videoMetadata = loadVideoMetadata();
-  const goFundMeConfig = getGoFundMeConfig();
+  const goFundMeConfig = getGoFundMeConfig(context.cloudflare.env);
   return { videos: videoMetadata.videos, goFundMeConfig };
 }
 

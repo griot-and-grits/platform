@@ -5,10 +5,10 @@ import { loadVideoMetadata, loadFilterMetadata } from "~/lib/load-metadata";
 import { isFeatureEnabled } from "~/lib/feature-flags";
 import type { Route } from "./+types/collection";
 
-export function loader() {
+export function loader({ context }: Route.LoaderArgs) {
   const videoMetadata = loadVideoMetadata();
   const filterMetadata = loadFilterMetadata();
-  const askTheGriotEnabled = isFeatureEnabled("askTheGriot");
+  const askTheGriotEnabled = isFeatureEnabled("askTheGriot", context.cloudflare.env);
   return {
     videos: videoMetadata.videos,
     filters: filterMetadata,
