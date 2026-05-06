@@ -138,3 +138,7 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 docs/vision.md
+
+docs/*.md
+
+apps/api/tmp/

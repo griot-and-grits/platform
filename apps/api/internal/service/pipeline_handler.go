@@ -7,6 +7,7 @@ import (
 
 	"github.com/griotandgrits/platform/apps/api/internal/domain"
 	"github.com/griotandgrits/platform/apps/api/internal/port"
+	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
 // PipelineHandlerService processes callbacks from the Python pipeline worker.
@@ -47,29 +48,23 @@ func (s *PipelineHandlerService) HandleCallback(ctx context.Context, cb domain.P
 		"status", cb.Status,
 	)
 
-	// Update processing_metadata with task status.
-	pm := artifact.ProcessingMetadata
-	if pm == nil {
-		pm = map[string]any{}
+	// Build a dotted-path $set so concurrent callbacks for different tasks
+	// don't overwrite each other's fields on processing_metadata.
+	fields := map[string]any{
+		"processing_metadata." + cb.Task: cb.Status,
 	}
-	pm[cb.Task] = cb.Status
 	if cb.Error != nil {
-		pm[cb.Task+"_error"] = *cb.Error
+		fields["processing_metadata."+cb.Task+"_error"] = *cb.Error
 	}
 
 	// Apply task-specific results.
-	fields := map[string]any{
-		"processing_metadata": pm,
-	}
-
 	if cb.Status == "success" && cb.Result != nil {
 		switch cb.Task {
 		case "metadata_extraction":
 			s.applyMetadataResult(fields, cb.Result)
 		case "transcription":
 			if transcript, ok := cb.Result["transcript"].(string); ok {
-				pm["transcript"] = transcript
-				fields["processing_metadata"] = pm
+				fields["processing_metadata.transcript"] = transcript
 			}
 		case "archival":
 			if err := s.applyArchivalResult(ctx, cb.ArtifactID, cb.Result); err != nil {
@@ -94,15 +89,23 @@ func (s *PipelineHandlerService) HandleCallback(ctx context.Context, cb domain.P
 	}
 
 	eventType := taskToEventType(cb.Task)
-	_ = s.preservation.LogEvent(ctx, cb.ArtifactID, domain.PreservationEvent{
+	if err := s.preservation.LogEvent(ctx, cb.ArtifactID, domain.PreservationEvent{
 		EventType: eventType,
 		Agent:     "pipeline-worker",
 		Outcome:   outcome,
 		Detail:    detail,
-	})
+	}); err != nil {
+		s.logger.Error("log preservation event", "error", err, "artifact_id", cb.ArtifactID, "task", cb.Task)
+	}
 
-	// Check if all tasks are done — transition to READY or FAILED.
-	s.checkCompletion(ctx, cb.ArtifactID, pm)
+	// Re-fetch the artifact so checkCompletion sees every concurrent peer's updates.
+	fresh, err := s.repo.FindByID(ctx, cb.ArtifactID)
+	if err != nil {
+		return fmt.Errorf("refetch artifact for completion check: %w", err)
+	}
+	if fresh != nil {
+		s.checkCompletion(ctx, cb.ArtifactID, fresh.ProcessingMetadata)
+	}
 
 	return nil
 }
@@ -124,20 +127,26 @@ func (s *PipelineHandlerService) applyArchivalResult(ctx context.Context, artifa
 	}
 
 	return s.storageLoc.RegisterLocation(ctx, artifactID, domain.StorageLocation{
-		StorageType:    domain.StorageTypeArchive,
-		Path:           path,
-		Bucket:         bucket,
-		ChecksumMD5:    checksumMD5,
-		SizeBytes:      int64(sizeBytes),
+		StorageType: domain.StorageTypeArchive,
+		Path:        path,
+		Bucket:      bucket,
+		ChecksumMD5: checksumMD5,
+		SizeBytes:   int64(sizeBytes),
 	})
 }
 
-// checkCompletion examines processing_metadata to determine if all tasks are done.
+// checkCompletion examines processing_metadata to determine if all tasks dispatched
+// for this artifact have reported back. The expected task list is written at dispatch
+// time so config drift (enabling/disabling features) can't strand in-flight artifacts.
 func (s *PipelineHandlerService) checkCompletion(ctx context.Context, artifactID string, pm map[string]any) {
-	expectedTasks := []string{"metadata_extraction", "transcription", "archival"}
+	expectedTasks := extractExpectedTasks(pm)
+	if len(expectedTasks) == 0 {
+		// No expected_tasks recorded — can't decide completion; leave status alone.
+		return
+	}
+
 	allDone := true
 	anyFailed := false
-
 	for _, task := range expectedTasks {
 		status, exists := pm[task].(string)
 		if !exists {
@@ -156,18 +165,46 @@ func (s *PipelineHandlerService) checkCompletion(ctx context.Context, artifactID
 		return
 	}
 
-	var finalStatus domain.ArtifactStatus
+	finalStatus := domain.ArtifactStatusReady
 	if anyFailed {
 		finalStatus = domain.ArtifactStatusFailed
-	} else {
-		finalStatus = domain.ArtifactStatusReady
 	}
 
 	if err := s.repo.UpdateStatus(ctx, artifactID, finalStatus); err != nil {
 		s.logger.Error("update final status", "error", err, "artifact_id", artifactID)
-	} else {
-		s.logger.Info("artifact status updated", "artifact_id", artifactID, "status", finalStatus)
+		return
 	}
+	s.logger.Info("artifact status updated", "artifact_id", artifactID, "status", finalStatus)
+}
+
+// extractExpectedTasks pulls the expected_tasks list out of processing_metadata.
+// BSON arrays decode into bson.A ([]any), so handle both that and []string.
+func extractExpectedTasks(pm map[string]any) []string {
+	raw, ok := pm["expected_tasks"]
+	if !ok {
+		return nil
+	}
+	switch v := raw.(type) {
+	case []string:
+		return v
+	case bson.A:
+		out := make([]string, 0, len(v))
+		for _, item := range v {
+			if s, ok := item.(string); ok {
+				out = append(out, s)
+			}
+		}
+		return out
+	case []any:
+		out := make([]string, 0, len(v))
+		for _, item := range v {
+			if s, ok := item.(string); ok {
+				out = append(out, s)
+			}
+		}
+		return out
+	}
+	return nil
 }
 
 func taskToEventType(task string) domain.PreservationEventType {

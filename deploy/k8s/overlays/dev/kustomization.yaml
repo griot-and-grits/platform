@@ -1,0 +1,76 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: griot-grits-dev
+
+resources:
+  - ../../base
+
+configMapGenerator:
+  - name: gng-api-config
+    literals:
+      - ENVIRONMENT=development
+      - SERVER_PORT=8009
+      - DB_NAME=gngdb
+      - STORAGE_ENDPOINT=minio.griot-grits-dev.svc.cluster.local:9000
+      - STORAGE_BUCKET=artifacts
+      - STORAGE_REGION=us-east-1
+      - STORAGE_SECURE=false
+      - ARCHIVE_PROVIDER=minio-archive
+      - ARCHIVE_BUCKET=archive
+      - GLOBUS_ENABLED=false
+      - PIPELINE_PROVIDER=redis-queue
+      - REDIS_URL=redis://gng-redis.griot-grits-dev.svc.cluster.local:6379/0
+      - PIPELINE_CALLBACK_URL=http://gng-api.griot-grits-dev.svc.cluster.local:8009
+      - PROCESSING_ENABLE_METADATA_EXTRACTION=true
+      - PROCESSING_ENABLE_TRANSCRIPTION=false
+      - PROCESSING_ENABLE_LLM_ENRICHMENT=false
+      - CORS_ALLOWED_ORIGINS=*
+      - ADMIN_DEV_BYPASS=true
+
+  - name: gng-worker-config
+    literals:
+      - REDIS_URL=redis://gng-redis.griot-grits-dev.svc.cluster.local:6379/0
+      - PIPELINE_CALLBACK_URL=http://gng-api.griot-grits-dev.svc.cluster.local:8009
+      - STORAGE_ENDPOINT=minio.griot-grits-dev.svc.cluster.local:9000
+      - STORAGE_BUCKET=artifacts
+      - ARCHIVE_BUCKET=archive
+
+patches:
+  # Dev: single replicas, smaller resources
+  - target:
+      kind: Deployment
+      name: gng-api
+    patch: |
+      - op: replace
+        path: /spec/replicas
+        value: 1
+      - op: replace
+        path: /spec/template/spec/containers/0/resources
+        value:
+          requests:
+            memory: 128Mi
+            cpu: 100m
+          limits:
+            memory: 512Mi
+            cpu: 500m
+
+  # Dev: no GPU whisper — remove the deployment
+  - target:
+      kind: Deployment
+      name: gng-whisper
+    patch: |
+      $patch: delete
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: gng-whisper
+  - target:
+      kind: Service
+      name: gng-whisper
+    patch: |
+      $patch: delete
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: gng-whisper

@@ -1,0 +1,39 @@
+name: Deploy Worker
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'pipelines/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'pipelines/**'
+  workflow_dispatch:
+
+jobs:
+  build-push:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Quay.io
+        uses: docker/login-action@v3
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_PASSWORD }}
+
+      - name: Build and push Worker image
+        uses: docker/build-push-action@v6
+        with:
+          context: pipelines
+          push: true
+          tags: |
+            quay.io/griot-and-grits/gng-worker:latest
+            quay.io/griot-and-grits/gng-worker:${{ github.sha }}

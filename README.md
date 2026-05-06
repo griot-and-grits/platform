@@ -10,8 +10,9 @@ Digital preservation platform for African American history and culture. Preservi
 ```
 ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
 │   Frontend   │     │   Go API     │     │   Pipeline   │
-│  (Next.js)   │────▶│  (apps/api)  │────▶│   Workers    │
-│  port 3000   │     │  port 8009   │     │  (Python)    │
+│ (React Router│────▶│  (apps/api)  │────▶│   Workers    │
+│ on Workers)  │     │  port 6731   │     │  (Python)    │
+│  port 6730   │     │              │     │              │
 └──────────────┘     └──────┬───────┘     └──────┬───────┘
                             │                     │
                     ┌───────┼─────────────────────┤
@@ -25,17 +26,16 @@ Digital preservation platform for African American history and culture. Preservi
 | Directory | Stack | Purpose |
 |-----------|-------|---------|
 | `apps/api/` | Go 1.26, net/http, MongoDB, MinIO | HTTP API, orchestration, pipeline dispatch |
-| `apps/web/` | Next.js 15, React 19, TypeScript, Tailwind | Admin portal, public catalog, upload UI |
+| `apps/web/` | React Router 7 (Vite, Cloudflare Workers), React 19, TypeScript, Tailwind | Admin portal, public catalog, upload UI |
 | `pipelines/` | Python 3.13, FFmpeg, Whisper | Background AI processing |
 | `packages/` | OpenAPI spec | Shared API contracts |
 
 ## Quick Start
 
 ```bash
-make dev          # Start API + MongoDB + MinIO + Redis
-make dev-pipeline # Above + Python pipeline worker
-make api          # Go API with hot reload (bare metal)
-make web          # Next.js dev server
+make dev              # Start everything (API, frontend, worker, databases)
+make deploy-web       # Deploy frontend to Cloudflare Pages
+make deploy-k8s       # Deploy backend to OpenShift
 ```
 
 ## Documentation
@@ -45,5 +45,6 @@ make web          # Next.js dev server
 | [Architecture](docs/architecture.md) | System design, hexagonal structure, service abstractions |
 | [Pipeline](docs/pipeline.md) | Background processing tasks, callback protocol, local vs production |
 | [API Reference](docs/api.md) | All endpoints, upload flows, request/response formats |
+| [Deployment](docs/deployment.md) | Cloudflare Pages (frontend), OpenShift/K8s (backend), Kustomize overlays |
 | [Development](docs/development.md) | Setup, make targets, environment variables |
 | [Implementation Plan](docs/implementation-plan.md) | Build phases, design decisions, risks |

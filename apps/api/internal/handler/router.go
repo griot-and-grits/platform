@@ -12,6 +12,8 @@ func NewRouter(
 	collection *CollectionHandler,
 	health *HealthHandler,
 	pipelineCallback *PipelineCallbackHandler,
+	auth *AuthHandler,
+	integrations *IntegrationsHandler,
 	corsOrigins []string,
 	logger *slog.Logger,
 ) http.Handler {
@@ -19,6 +21,14 @@ func NewRouter(
 
 	// Health
 	mux.HandleFunc("GET /health", health.Check)
+
+	// Auth
+	mux.HandleFunc("GET /auth/github", auth.StartLogin)
+	mux.HandleFunc("POST /auth/github", auth.DevLogin)
+	mux.HandleFunc("GET /auth/github/callback", auth.OAuthCallback)
+	mux.HandleFunc("GET /auth/session", auth.GetSession)
+	mux.HandleFunc("GET /auth/logout", auth.Logout)
+	mux.HandleFunc("POST /auth/logout", auth.Logout)
 
 	// Artifacts
 	mux.HandleFunc("POST /artifacts/ingest", artifact.Ingest)
@@ -39,6 +49,11 @@ func NewRouter(
 	mux.HandleFunc("GET /preservation/artifacts/{id}/storage-locations", preservation.GetStorageLocations)
 	mux.HandleFunc("GET /preservation/artifacts/{id}/fixity", preservation.GetFixity)
 	mux.HandleFunc("POST /preservation/artifacts/{id}/replicate", preservation.Replicate)
+
+	// Public integrations (proxy to Mailchimp / Classy)
+	mux.HandleFunc("POST /integrations/subscribe", integrations.Subscribe)
+	mux.HandleFunc("GET /integrations/gofundme/public", integrations.GoFundMePublic)
+	mux.HandleFunc("GET /integrations/gofundme/campaign", integrations.GoFundMeCampaign)
 
 	// Pipeline (internal)
 	mux.HandleFunc("POST /internal/pipeline/callback", pipelineCallback.HandleCallback)

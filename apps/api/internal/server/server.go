@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
-	"time"
+
+	"github.com/griotandgrits/platform/apps/api/internal/config"
 )
 
 type Server struct {
@@ -13,13 +14,16 @@ type Server struct {
 	logger     *slog.Logger
 }
 
-func New(handler http.Handler, port int, readTimeout, writeTimeout time.Duration, logger *slog.Logger) *Server {
+func New(handler http.Handler, cfg config.ServerConfig, logger *slog.Logger) *Server {
 	return &Server{
 		httpServer: &http.Server{
-			Addr:         fmt.Sprintf(":%d", port),
-			Handler:      handler,
-			ReadTimeout:  readTimeout,
-			WriteTimeout: writeTimeout,
+			Addr:              fmt.Sprintf(":%d", cfg.Port),
+			Handler:           handler,
+			ReadTimeout:       cfg.ReadTimeout,
+			ReadHeaderTimeout: cfg.ReadHeaderTimeout,
+			WriteTimeout:      cfg.WriteTimeout,
+			IdleTimeout:       cfg.IdleTimeout,
+			MaxHeaderBytes:    cfg.MaxHeaderBytes,
 		},
 		logger: logger,
 	}

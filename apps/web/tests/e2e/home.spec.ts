@@ -6,10 +6,9 @@ test.describe('Home Page', () => {
     await expect(page).toHaveTitle(/Griot and Grits/i);
   });
 
-  test('should have navigation links', async ({ page }) => {
+  test('should have navigation', async ({ page }) => {
     await page.goto('/');
-
-    const nav = page.locator('nav');
+    const nav = page.locator('nav').first();
     await expect(nav).toBeVisible();
   });
 

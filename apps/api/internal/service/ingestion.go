@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"log/slog"
 	"path/filepath"
 	"strings"
 	"time"
@@ -22,6 +23,7 @@ type IngestionService struct {
 	storageLoc   *StorageLocationService
 	cfg          *config.Config
 	dispatcher   port.PipelineDispatcher
+	logger       *slog.Logger
 }
 
 func NewIngestionService(
@@ -32,6 +34,7 @@ func NewIngestionService(
 	storageLoc *StorageLocationService,
 	cfg *config.Config,
 	dispatcher port.PipelineDispatcher,
+	logger *slog.Logger,
 ) *IngestionService {
 	return &IngestionService{
 		repo:         repo,
@@ -41,6 +44,7 @@ func NewIngestionService(
 		storageLoc:   storageLoc,
 		cfg:          cfg,
 		dispatcher:   dispatcher,
+		logger:       logger,
 	}
 }
 
@@ -187,11 +191,13 @@ func (s *IngestionService) RequestUploadURL(ctx context.Context, req domain.Uplo
 	}
 
 	// Store the storage path in processing_metadata so ConfirmUpload can find it.
-	_ = s.repo.UpdateFields(ctx, artifactID, map[string]any{
-		"processing_metadata": map[string]any{
-			"storage_path": storagePath,
-		},
-	})
+	// Use dotted-path $set so we don't clobber other keys written concurrently.
+	if err := s.repo.UpdateFields(ctx, artifactID, map[string]any{
+		"processing_metadata.storage_path": storagePath,
+	}); err != nil {
+		s.markFailed(ctx, artifactID, "api", fmt.Sprintf("Persist storage path failed: %v", err))
+		return nil, fmt.Errorf("persist storage path: %w", err)
+	}
 
 	return &domain.UploadURLResponse{
 		ArtifactID: artifactID,
@@ -225,18 +231,10 @@ func (s *IngestionService) ConfirmUpload(ctx context.Context, artifactID string)
 		return nil, fmt.Errorf("object not found at %s: %w", storagePath, err)
 	}
 
-	// Stream from MinIO for checksum calculation.
-	reader, err := s.store.Download(ctx, s.cfg.Storage.Bucket, storagePath)
-	if err != nil {
-		return nil, fmt.Errorf("download for checksums: %w", err)
-	}
-	defer reader.Close()
-
-	md5sum, sha256sum, _, err := s.fixity.CalculateChecksums(reader)
-	if err != nil {
-		return nil, fmt.Errorf("calculate checksums: %w", err)
-	}
-
+	// Use MinIO's ETag as MD5. Presigned PUT uploads are single-part so ETag == MD5 hex.
+	// SHA-256 is computed later by the pipeline worker, which already downloads the file.
+	md5sum := strings.Trim(objInfo.ETag, `"`)
+	sha256sum := ""
 	fixityInfo := s.fixity.GenerateFixityInfo(md5sum, sha256sum)
 
 	// Update artifact with fixity and size.
@@ -310,6 +308,18 @@ func (s *IngestionService) dispatchPipelineJob(ctx context.Context, artifactID, 
 	}
 	// Always archive after processing.
 	tasks = append(tasks, domain.TaskArchival)
+
+	// Persist which tasks this artifact is waiting on so checkCompletion
+	// knows when all expected callbacks have arrived regardless of config drift.
+	taskNames := make([]string, len(tasks))
+	for i, t := range tasks {
+		taskNames[i] = string(t)
+	}
+	if err := s.repo.UpdateFields(ctx, artifactID, map[string]any{
+		"processing_metadata.expected_tasks": taskNames,
+	}); err != nil {
+		s.logger.Error("persist expected_tasks", "error", err, "artifact_id", artifactID)
+	}
 
 	job := domain.PipelineJob{
 		ArtifactID:    artifactID,

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"time"
 
 	"github.com/griotandgrits/platform/apps/api/internal/adapter/mongo"
 	"github.com/griotandgrits/platform/apps/api/internal/adapter/pipeline"
@@ -56,6 +57,7 @@ func Initialize(ctx context.Context, cfg *config.Config, logger *slog.Logger) (*
 		storageLocSvc,
 		cfg,
 		dispatcher,
+		logger,
 	)
 	pipelineHandlerSvc := service.NewPipelineHandlerService(
 		artifactRepo,
@@ -64,12 +66,18 @@ func Initialize(ctx context.Context, cfg *config.Config, logger *slog.Logger) (*
 		logger,
 	)
 
+	// Auth + integrations
+	authSvc := service.NewAuthService(cfg.Auth)
+	integrationsSvc := service.NewIntegrationsService(cfg.Integrations)
+
 	// Handlers
-	artifactHandler := handler.NewArtifactHandler(ingestionSvc, artifactRepo)
+	artifactHandler := handler.NewArtifactHandler(ingestionSvc, artifactRepo, cfg.Server.MaxUploadSize, cfg.Server.MaxJSONBodyBytes)
 	preservationHandler := handler.NewPreservationHandler(preservationSvc)
 	collectionHandler := handler.NewCollectionHandler()
 	healthHandler := handler.NewHealthHandler(cfg)
-	pipelineCallbackHandler := handler.NewPipelineCallbackHandler(pipelineHandlerSvc, cfg.Pipeline.CallbackSecret)
+	pipelineCallbackHandler := handler.NewPipelineCallbackHandler(pipelineHandlerSvc, cfg.Pipeline.CallbackSecret, cfg.Server.MaxJSONBodyBytes)
+	authHandler := handler.NewAuthHandler(authSvc, cfg.Auth.PublicBaseURL, cfg.Auth.DefaultRedirect, logger)
+	integrationsHandler := handler.NewIntegrationsHandler(integrationsSvc, logger)
 
 	// Router
 	router := handler.NewRouter(
@@ -78,22 +86,20 @@ func Initialize(ctx context.Context, cfg *config.Config, logger *slog.Logger) (*
 		collectionHandler,
 		healthHandler,
 		pipelineCallbackHandler,
+		authHandler,
+		integrationsHandler,
 		cfg.CORS.AllowedOrigins,
 		logger,
 	)
 
 	// Server
-	srv := server.New(
-		router,
-		cfg.Server.Port,
-		cfg.Server.ReadTimeout,
-		cfg.Server.WriteTimeout,
-		logger,
-	)
+	srv := server.New(router, cfg.Server, logger)
 
 	cleanup := func() {
 		_ = dispatcher.Close()
-		if err := mongoClient.Disconnect(ctx); err != nil {
+		disconnectCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		if err := mongoClient.Disconnect(disconnectCtx); err != nil {
 			logger.Error("mongo disconnect", "error", err)
 		}
 	}

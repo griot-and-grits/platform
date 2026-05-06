@@ -1,0 +1,50 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "gng-web",
+  "compatibility_date": "2025-04-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "build/client"
+  },
+  "main": "build/server/index.js",
+
+  // Server-side env (read in loaders/actions via context.cloudflare.env).
+  // Client-readable values use VITE_* and are baked in at build time, not here.
+  // Secrets go in via `wrangler secret put NAME --env <env>`.
+  "vars": {
+    "ADMIN_DEV_BYPASS": "false",
+    "ADMIN_AUTH_DISABLED": "false",
+    "FEATURE_ASK_THE_GRIOT": "false",
+    "FEATURE_GOFUNDME": "true",
+    "GOFUNDME_CAMPAIGN_ID": "731313",
+    "GOFUNDME_USE_EMBEDDED": "false",
+    "GOFUNDME_SHOW_TRACKER": "false"
+  },
+
+  "env": {
+    "production": {
+      "name": "gng-web",
+      "vars": {
+        "ADMIN_DEV_BYPASS": "false",
+        "ADMIN_AUTH_DISABLED": "false",
+        "FEATURE_ASK_THE_GRIOT": "false",
+        "FEATURE_GOFUNDME": "true",
+        "GOFUNDME_CAMPAIGN_ID": "731313",
+        "GOFUNDME_USE_EMBEDDED": "false",
+        "GOFUNDME_SHOW_TRACKER": "false"
+      }
+    },
+    "preview": {
+      "name": "gng-web-preview",
+      "vars": {
+        "ADMIN_DEV_BYPASS": "false",
+        "ADMIN_AUTH_DISABLED": "false",
+        "FEATURE_ASK_THE_GRIOT": "false",
+        "FEATURE_GOFUNDME": "true",
+        "GOFUNDME_CAMPAIGN_ID": "731313",
+        "GOFUNDME_USE_EMBEDDED": "false",
+        "GOFUNDME_SHOW_TRACKER": "false"
+      }
+    }
+  }
+}

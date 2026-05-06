@@ -5,5 +5,4 @@ test.describe('Collection Page', () => {
     await page.goto('/collection');
     await expect(page).toHaveURL(/\/collection/);
   });
-
 });

@@ -10,14 +10,16 @@ import (
 )
 
 type PipelineCallbackHandler struct {
-	pipelineHandler *service.PipelineHandlerService
-	callbackSecret  string
+	pipelineHandler  *service.PipelineHandlerService
+	callbackSecret   string
+	maxJSONBodyBytes int64
 }
 
-func NewPipelineCallbackHandler(pipelineHandler *service.PipelineHandlerService, callbackSecret string) *PipelineCallbackHandler {
+func NewPipelineCallbackHandler(pipelineHandler *service.PipelineHandlerService, callbackSecret string, maxJSONBodyBytes int64) *PipelineCallbackHandler {
 	return &PipelineCallbackHandler{
-		pipelineHandler: pipelineHandler,
-		callbackSecret:  callbackSecret,
+		pipelineHandler:  pipelineHandler,
+		callbackSecret:   callbackSecret,
+		maxJSONBodyBytes: maxJSONBodyBytes,
 	}
 }
 
@@ -30,6 +32,9 @@ func (h *PipelineCallbackHandler) HandleCallback(w http.ResponseWriter, r *http.
 		return
 	}
 
+	if h.maxJSONBodyBytes > 0 {
+		r.Body = http.MaxBytesReader(w, r.Body, h.maxJSONBodyBytes)
+	}
 	var cb domain.PipelineCallback
 	if err := json.NewDecoder(r.Body).Decode(&cb); err != nil {
 		writeError(w, http.StatusBadRequest, "Invalid callback payload: "+err.Error())
