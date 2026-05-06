@@ -54,5 +54,5 @@ jobs:
           context: apps/api
           push: true
           tags: |
-            quay.io/griot-and-grits/gng-api:latest
-            quay.io/griot-and-grits/gng-api:${{ github.sha }}
+            quay.io/griotandgrits/gng-api:latest
+            quay.io/griotandgrits/gng-api:${{ github.sha }}

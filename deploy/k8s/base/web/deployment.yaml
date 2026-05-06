@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: web
-          image: quay.io/griot-and-grits/gng-web:latest
+          image: quay.io/griotandgrits/gng-web:latest
           imagePullPolicy: Always
           ports:
             - name: http

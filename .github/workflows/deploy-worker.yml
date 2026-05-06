@@ -35,5 +35,5 @@ jobs:
           context: pipelines
           push: true
           tags: |
-            quay.io/griot-and-grits/gng-worker:latest
-            quay.io/griot-and-grits/gng-worker:${{ github.sha }}
+            quay.io/griotandgrits/gng-worker:latest
+            quay.io/griotandgrits/gng-worker:${{ github.sha }}

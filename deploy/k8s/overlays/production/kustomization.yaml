@@ -56,7 +56,7 @@ patches:
         value: 2
 
 images:
-  - name: quay.io/griot-and-grits/gng-api
+  - name: quay.io/griotandgrits/gng-api
     newTag: latest
-  - name: quay.io/griot-and-grits/gng-worker
+  - name: quay.io/griotandgrits/gng-worker
     newTag: latest

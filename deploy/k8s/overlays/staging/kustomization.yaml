@@ -42,7 +42,7 @@ configMapGenerator:
       - TRANSCRIPTION_API_URL=http://gng-whisper.griot-grits-staging.svc.cluster.local:9000
 
 images:
-  - name: quay.io/griot-and-grits/gng-api
+  - name: quay.io/griotandgrits/gng-api
     newTag: staging
-  - name: quay.io/griot-and-grits/gng-worker
+  - name: quay.io/griotandgrits/gng-worker
     newTag: staging
