@@ -1,6 +1,5 @@
 
 import { Github } from "lucide-react";
-import { useState } from "react";
 import { getLoginURL } from "~/lib/auth";
 
 type SignInPanelProps = {
@@ -14,8 +13,6 @@ export function SignInPanel({
   githubEnabled,
   devBypassEnabled,
 }: SignInPanelProps) {
-  const [message, setMessage] = useState<string | null>(null);
-
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4 py-16">
       <div className="rounded-lg border border-slate-200 bg-white p-8 shadow-sm">
@@ -52,11 +49,6 @@ export function SignInPanel({
           </p>
         )}
 
-        {message && (
-          <p className="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-800">
-            {message}
-          </p>
-        )}
       </div>
     </div>
   );
