@@ -35,7 +35,7 @@ jobs:
         working-directory: apps/web
         env:
           VITE_PUBLIC_API_BASE_URL: ${{ vars.PUBLIC_API_BASE_URL }}
-          NEXT_PUBLIC_ADMIN_API_BASE_URL: ${{ vars.ADMIN_API_BASE_URL }}
+          VITE_ADMIN_API_BASE_URL: ${{ vars.ADMIN_API_BASE_URL }}
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -65,11 +65,12 @@ jobs:
         run: npm ci
         working-directory: apps/web
 
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: web-build
-          path: apps/web/build
+      - name: Build
+        run: npm run build
+        working-directory: apps/web
+        env:
+          VITE_PUBLIC_API_BASE_URL: ${{ vars.PUBLIC_API_BASE_URL }}
+          VITE_ADMIN_API_BASE_URL: ${{ vars.ADMIN_API_BASE_URL }}
 
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
@@ -78,3 +79,30 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: apps/web
           command: deploy --env production
+
+  build-push-image:
+    name: Build & push web image
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Quay.io
+        uses: docker/login-action@v3
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_PASSWORD }}
+
+      - name: Build and push Web image
+        uses: docker/build-push-action@v6
+        with:
+          context: apps/web
+          push: true
+          tags: |
+            quay.io/griotandgrits/gng-web:latest
+            quay.io/griotandgrits/gng-web:${{ github.sha }}

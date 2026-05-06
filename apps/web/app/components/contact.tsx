@@ -33,7 +33,7 @@ const ContactSection: React.FC = () => {
                             <a
                                 href="mailto:info@griotandgrits.org"
                                 className="text-2xl md:text-3xl font-light hover:text-[#AE2D24] transition-colors inline-block"
-                                target="_blank"
+                                target="_blank" rel="noreferrer"
                             >
                                 info@griotandgrits.org
                             </a>
@@ -44,7 +44,7 @@ const ContactSection: React.FC = () => {
                             <a
                                 href="https://github.com/griot-and-grits/griot-and-grits"
                                 className="text-xl md:text-2xl font-light hover:text-[#AE2D24] transition-colors inline-flex items-center gap-2"
-                                target="_blank"
+                                target="_blank" rel="noreferrer"
                             >
                                 <SiGithub size={28} />
                                 <span>Contribute on GitHub</span>
@@ -69,7 +69,7 @@ const ContactSection: React.FC = () => {
                                     key={index}
                                     href={link}
                                     target='_blank'
-                                    className="text-gray-400 hover:text-white transition-colors"
+                                    className="text-gray-400 hover:text-white transition-colors" rel="noreferrer"
                                 >
                                     <IconComponent size={28} />
                                 </a>

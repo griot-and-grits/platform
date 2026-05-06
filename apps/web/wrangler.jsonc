@@ -6,7 +6,7 @@
   "assets": {
     "directory": "build/client"
   },
-  "main": "build/server/index.js",
+  "main": "workers/app.ts",
 
   // Server-side env (read in loaders/actions via context.cloudflare.env).
   // Client-readable values use VITE_* and are baked in at build time, not here.

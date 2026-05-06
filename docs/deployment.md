@@ -165,9 +165,9 @@ kubectl create secret generic gng-worker-secret \
 
 | Service | Registry | Image |
 |---------|----------|-------|
-| API | quay.io | `quay.io/griot-and-grits/gng-api` |
-| Worker | quay.io | `quay.io/griot-and-grits/gng-worker` |
-| Frontend | quay.io | `quay.io/griot-and-grits/gng-web` |
+| API | quay.io | `quay.io/griotandgrits/gng-api` |
+| Worker | quay.io | `quay.io/griotandgrits/gng-worker` |
+| Frontend | quay.io | `quay.io/griotandgrits/gng-web` |
 | Whisper | Docker Hub | `onerahmet/openai-whisper-asr-webservice:latest-gpu` |
 
 ### CI/CD (automatic)
@@ -191,12 +191,12 @@ All deploy workflows use path filters — they only trigger when their component
 
 ```bash
 # API
-docker build -t quay.io/griot-and-grits/gng-api:latest apps/api
-docker push quay.io/griot-and-grits/gng-api:latest
+docker build -t quay.io/griotandgrits/gng-api:latest apps/api
+docker push quay.io/griotandgrits/gng-api:latest
 
 # Worker
-docker build -t quay.io/griot-and-grits/gng-worker:latest pipelines/
-docker push quay.io/griot-and-grits/gng-worker:latest
+docker build -t quay.io/griotandgrits/gng-worker:latest pipelines/
+docker push quay.io/griotandgrits/gng-worker:latest
 ```
 
 ### Network topology (production)
