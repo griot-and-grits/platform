@@ -28,7 +28,12 @@ configMapGenerator:
       - PROCESSING_ENABLE_METADATA_EXTRACTION=true
       - PROCESSING_ENABLE_TRANSCRIPTION=true
       - PROCESSING_ENABLE_LLM_ENRICHMENT=false
-      - CORS_ALLOWED_ORIGINS=https://www.griotandgrits.org
+      - CORS_ALLOWED_ORIGINS=https://www.griotandgrits.org,https://griotandgrits.org
+      - AUTH_PUBLIC_BASE_URL=https://api.griotandgrits.org
+      - AUTH_DEFAULT_REDIRECT=https://www.griotandgrits.org/admin
+      - AUTH_COOKIE_DOMAIN=.griotandgrits.org
+      - AUTH_COOKIE_SECURE=true
+      - ADMIN_DEV_BYPASS=false
 
   - name: gng-worker-config
     literals:

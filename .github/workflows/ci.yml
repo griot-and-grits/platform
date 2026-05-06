@@ -31,7 +31,7 @@ jobs:
         working-directory: apps/api
 
   web:
-    name: Web — build
+    name: Web — typecheck & build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -44,6 +44,10 @@ jobs:
 
       - name: Install
         run: npm ci
+        working-directory: apps/web
+
+      - name: Typecheck
+        run: npm run typecheck
         working-directory: apps/web
 
       - name: Build

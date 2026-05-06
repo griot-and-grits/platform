@@ -6,5 +6,33 @@
   "assets": {
     "directory": "build/client"
   },
-  "main": "build/server/index.js"
+  "main": "build/server/index.js",
+
+  // Default vars (used for `wrangler dev` and previews unless overridden by env).
+  // Loaders read these via process.env on the worker. Client-side code reads
+  // VITE_PUBLIC_API_BASE_URL which is baked in at build time, not from here.
+  "vars": {
+    "NEXT_PUBLIC_ADMIN_API_BASE_URL": "https://api-dev.griotandgrits.org",
+    "ADMIN_DEV_BYPASS": "false"
+  },
+
+  // Per-environment overrides. Deploy with `wrangler deploy --env production`.
+  // Worker secrets (none required today; auth/integration secrets live on the
+  // Go API host) would go in via `wrangler secret put NAME --env production`.
+  "env": {
+    "production": {
+      "name": "gng-web",
+      "vars": {
+        "NEXT_PUBLIC_ADMIN_API_BASE_URL": "https://api.griotandgrits.org",
+        "ADMIN_DEV_BYPASS": "false"
+      }
+    },
+    "preview": {
+      "name": "gng-web-preview",
+      "vars": {
+        "NEXT_PUBLIC_ADMIN_API_BASE_URL": "https://api-dev.griotandgrits.org",
+        "ADMIN_DEV_BYPASS": "false"
+      }
+    }
+  }
 }

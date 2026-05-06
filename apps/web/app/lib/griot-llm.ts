@@ -87,7 +87,7 @@ class GriotLLMService {
             throw new Error(`Ollama API error: ${response.status} ${response.statusText}`);
         }
 
-        const data = await response.json();
+        const data = (await response.json()) as { message?: { content?: string } };
         return {
             content: data.message?.content || "I apologize, but I couldn't generate a response.",
         };
@@ -174,7 +174,7 @@ class GriotLLMService {
             throw new Error(`vLLM API error: ${response.status} ${response.statusText}`);
         }
 
-        const data = await response.json();
+        const data = (await response.json()) as { choices?: Array<{ message?: { content?: string } }> };
         return {
             content: data.choices?.[0]?.message?.content || "I apologize, but I couldn't generate a response.",
         };
@@ -265,7 +265,7 @@ class GriotLLMService {
             throw new Error(`llama.cpp API error: ${response.status} ${response.statusText}`);
         }
 
-        const data = await response.json();
+        const data = (await response.json()) as { choices?: Array<{ message?: { content?: string } }> };
         return {
             content: data.choices?.[0]?.message?.content || "I apologize, but I couldn't generate a response.",
         };
@@ -356,7 +356,7 @@ class GriotLLMService {
             throw new Error(`OpenShift AI API error: ${response.status} ${response.statusText}`);
         }
 
-        const data = await response.json();
+        const data = (await response.json()) as { choices?: Array<{ message?: { content?: string } }> };
         return {
             content: data.choices?.[0]?.message?.content || "I apologize, but I couldn't generate a response.",
         };

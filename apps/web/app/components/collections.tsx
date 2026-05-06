@@ -53,7 +53,7 @@ interface CollectionsProps {
 }
 
 const Collections: React.FC<CollectionsProps> = ({ videos, filters, askTheGriotEnabled = true }) => {
-    const searchParams = useSearchParams();
+    const [searchParams] = useSearchParams();
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
     const [showMap, setShowMap] = useState(false);

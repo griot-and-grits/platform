@@ -66,7 +66,7 @@ export function CollectionTable() {
                         Refresh
                     </button>
                     <Link
-                        href="/admin/collections/create"
+                        to="/admin/collections/create"
                         className="inline-flex items-center gap-2 rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
                     >
                         Create Collection
@@ -139,7 +139,7 @@ export function CollectionTable() {
                                     </td>
                                     <td className="px-4 py-3 text-right text-sm">
                                         <Link
-                                            href={`/admin/collections/${collection.collection_id}`}
+                                            to={`/admin/collections/${collection.collection_id}`}
                                             className="text-sm font-semibold text-slate-900 hover:underline"
                                         >
                                             View

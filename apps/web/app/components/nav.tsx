@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 // Image: using standard img tag
 import { Link } from 'react-router';
 import { useNavigate } from 'react-router';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { X } from 'lucide-react';
 import { SiGithub, SiFacebook, SiX, SiInstagram, SiYoutube, SiSpotify } from '@icons-pack/react-simple-icons';
 
@@ -88,7 +88,7 @@ const Nav = () => {
         { label: 'Get In Touch', href: '/#contact' }
     ];
 
-    const containerVariants = {
+    const containerVariants: Variants = {
         hidden: { opacity: 0 },
         visible: {
         opacity: 1,
@@ -99,7 +99,7 @@ const Nav = () => {
         }
     };
 
-    const itemVariants = {
+    const itemVariants: Variants = {
         hidden: { y: 20, opacity: 0 },
         visible: {
         y: 0,
@@ -116,14 +116,14 @@ const Nav = () => {
         }
     };
 
-    const textVariants = {
+    const textVariants: Variants = {
         hidden: { opacity: 0, x: -20 },
         visible: {
-        opacity: 1, 
+        opacity: 1,
         x: 0,
-        transition: { 
-            type: "spring", 
-            stiffness: 100 
+        transition: {
+            type: "spring",
+            stiffness: 100
         }
         }
     };
@@ -263,7 +263,7 @@ const Nav = () => {
                         className="border-b border-white/5 last:border-b-0"
                     >
                         <Link
-                            href={link.href}
+                            to={link.href}
                             className="block py-4 text-lg text-white/50 hover:text-white transition-colors"
                             onClick={(e) => handleNavClick(e, link.href)}
                         >

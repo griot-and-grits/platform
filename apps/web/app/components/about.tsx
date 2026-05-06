@@ -30,8 +30,8 @@ export const CollectionCTA = () => {
             method: 'POST'
         });
 
-        const data = await res.json().catch(() => ({}));
-        const error = data?.detail ?? data?.error;
+        const data = (await res.json().catch(() => ({}))) as { detail?: string; error?: string };
+        const error = data.detail ?? data.error;
 
         if (error) {
             setMessage(error);

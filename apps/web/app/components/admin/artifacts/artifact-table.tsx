@@ -132,7 +132,7 @@ export function ArtifactTable() {
                                     </td>
                                     <td className="px-4 py-3 text-right text-sm">
                                         <Link
-                                            href={`/admin/artifacts/${artifact.artifact_id}`}
+                                            to={`/admin/artifacts/${artifact.artifact_id}`}
                                             className="text-sm font-semibold text-slate-900 hover:underline"
                                         >
                                             View
